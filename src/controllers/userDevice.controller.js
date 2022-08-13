@@ -2,6 +2,25 @@ const { response } = require("express");
 const { generateJWT } = require("../helpers/jwt");
 const UserDevice = require("../models/UserDevice.model");
 
+const getUserDevice = async (req, res = response) => {
+  
+  try {
+    const userDevice = await UserDevice.find()
+    // const userDevice = await UserDevice.find().populate("userDevice", "nameUser")
+
+    return res.json({
+      transaction: true,
+      userDevice,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      transaction: false,
+      msg: "Excepcion No Controlada, por favor informe al administrador.",
+    });
+  }
+};
+
 const registerUserDevice = async (req, res = response) => {
   const { deviceId } = req.body;
   try {
@@ -65,6 +84,7 @@ const getNewToken = async (req, res = response) => {
 };
 
 module.exports = {
+  getUserDevice,
   registerUserDevice,
   getNewToken,
 };
