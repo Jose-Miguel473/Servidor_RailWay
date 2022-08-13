@@ -15,17 +15,20 @@ const registerUserDevice = async (req, res = response) => {
     userDevice = new UserDevice(req.body);
 
     await userDevice.save();
-    
+
     // Generate Token
-    const token = await generateJWT( userDevice.id, userDevice.nameUser, userDevice.deviceId);
+    const token = await generateJWT(
+      userDevice.id,
+      userDevice.nameUser,
+      userDevice.deviceId
+    );
 
     return res.status(201).json({
       transaction: true,
       uid: userDevice.id,
       name: userDevice.nameUser,
-      token
+      token,
     });
-
   } catch (error) {
     console.log(error);
     return res.status(500).json({
@@ -36,11 +39,17 @@ const registerUserDevice = async (req, res = response) => {
 };
 
 const getNewToken = async (req, res = response) => {
+  const { deviceId } = req.body;
   try {
-    const { uid, nameUser, deviceId } = req;
-    
+    const userDevice = await UserDevice.findOne({ deviceId });
+
+    // console.log("USER:",userDevice.id, userDevice.nameUser, userDevice.deviceId);
     // Generate New JSON WEB TOKEN - JWT
-    const token = await generateJWT(uid, nameUser, deviceId);
+    const token = await generateJWT(
+      userDevice.id,
+      userDevice.nameUser,
+      userDevice.deviceId
+    );
 
     return res.json({
       transaction: true,
@@ -57,5 +66,5 @@ const getNewToken = async (req, res = response) => {
 
 module.exports = {
   registerUserDevice,
-  getNewToken
+  getNewToken,
 };
