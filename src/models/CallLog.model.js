@@ -15,33 +15,33 @@ const CallLogSchema = new Schema(
     number: {
       type: String,
       unique: true,
-      require: true,
+      required: true,
     },
     nameContact: {
       type: String,
       default: "Unknow",
-      require: true,
+      required: true,
     },
     duration: {
       type: String,
-      require: true,
+      required: true,
     },
     type: {
       type: String,
-      require: true,
+      required: true,
     },
     typeRaw: {
       type: String,
-      require: true,
+      required: true,
     },
     date: {
       type: String,
-      require: true,
+      required: true,
     },
     userDevice: {
         type: Schema.Types.ObjectId,
         ref: 'UserDevice',
-        required: true
+        requiredd: true
     }
   },
   {

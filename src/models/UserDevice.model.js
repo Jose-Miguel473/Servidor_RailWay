@@ -34,13 +34,13 @@ const UserDeviceSchema = new Schema(
     nameUser: {
       type: String,
       default:"Unknow",
-      require: true,
+      required: true,
     },
     deviceId: {
       type: String,
       default:"Unknow",
       unique: true,
-      require: true,
+      required: true,
     },
     user: {
       type: String,
