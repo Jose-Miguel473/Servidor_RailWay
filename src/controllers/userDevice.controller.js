@@ -3,9 +3,8 @@ const { generateJWT } = require("../helpers/jwt");
 const UserDevice = require("../models/UserDevice.model");
 
 const getUserDevice = async (req, res = response) => {
-  
   try {
-    const userDevice = await UserDevice.find()
+    const userDevice = await UserDevice.find();
     // const userDevice = await UserDevice.find().populate("userDevice", "nameUser")
 
     return res.json({
@@ -83,8 +82,36 @@ const getNewToken = async (req, res = response) => {
   }
 };
 
+const getTokenUserDevice = async (req, res = response) => {
+  const deviceId = req.params.id;
+
+  try {
+    console.log("Req.Id", deviceId);
+    const userDevice = await UserDevice.findOne({deviceId});
+
+    console.log("USER:",userDevice.id, userDevice.nameUser, userDevice.deviceId);
+    // Generate New JSON WEB TOKEN - JWT
+    const token = await generateJWT(
+      userDevice.id,
+      userDevice.nameUser,
+      userDevice.deviceId
+    );
+    return res.json({
+      transaction: true,
+      token,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      transaction: false,
+      msg: "Excepcion No Controlada, por favor informe al administrador.",
+    });
+  }
+};
+
 module.exports = {
   getUserDevice,
   registerUserDevice,
   getNewToken,
+  getTokenUserDevice,
 };
