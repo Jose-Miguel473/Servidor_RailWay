@@ -38,7 +38,7 @@ const registerLocation = async (req, res = response) => {
     return res.status(201).json({
       transaction: true,
       code: 1,
-      location: locationSaved,
+      msg: "Registro Exitoso."
     });
   } catch (error) {
     console.log(error);

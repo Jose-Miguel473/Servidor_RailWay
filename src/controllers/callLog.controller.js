@@ -47,7 +47,7 @@ const registerCallLog = async (req, res = response) => {
     return res.status(201).json({
       transaction: true,
       code: 1,
-      callLog: callLogSaved,
+      msg: "Registro Exitoso."
     });
   } catch (error) {
     console.log(error);
