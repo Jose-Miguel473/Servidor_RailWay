@@ -1,6 +1,10 @@
 const { Router } = require("express");
 const { check } = require("express-validator");
-const { registerUserDevice, getNewToken, getUserDevice } = require("../controllers/userDevice.controller");
+const {
+  registerUserDevice,
+  getNewToken,
+  getUserDevice,
+} = require("../controllers/userDevice.controller");
 
 const userDevice = Router();
 

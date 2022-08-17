@@ -19,9 +19,9 @@ App.use(express.json());
 App.use(morgan("dev"));
 
 //Middleware
-App.use("/api/userDevice", userDevice);
-App.use("/api/callLog", callLog);
-App.use("/api/location", location);
+App.use("/api/v1/userDevice", userDevice);
+App.use("/api/v1/callLog", callLog);
+App.use("/api/v1/location", location);
 
 App.use(express.static("public"));
 

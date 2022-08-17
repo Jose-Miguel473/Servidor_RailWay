@@ -11,14 +11,16 @@ const getCallLogs = async (req, res = response) => {
     );
     // const callLogs = await CallLog.find().populate("userDevice", "nameUser")
 
-    return res.json({
+    return res.status(200).json({
       transaction: true,
+      code: 0,
       callLogs,
     });
   } catch (error) {
     console.log(error);
     return res.status(500).json({
       transaction: false,
+      code: -2, // Excepcion no controllada
       msg: "Excepcion No Controlada, por favor informe al administrador.",
     });
   }
@@ -34,6 +36,7 @@ const registerCallLog = async (req, res = response) => {
     if (callLogNumber) {
       return res.status(400).json({
         transaction: false,
+        code: 2, 
         msg: "El numero ya fue registrado.",
       });
     }
@@ -41,14 +44,16 @@ const registerCallLog = async (req, res = response) => {
 
     const callLogSaved = await callLog.save();
 
-    return res.json({
+    return res.status(201).json({
       transaction: true,
-      CallLog: callLogSaved,
+      code: 1,
+      callLog: callLogSaved,
     });
   } catch (error) {
     console.log(error);
     return res.status(500).json({
       transaction: false,
+      code: -2, // Excepcion no controllada
       msg: "Excepcion No Controlada, por favor informe al administrador.",
     });
   }
@@ -64,6 +69,7 @@ const updateCallLog = async (req, res = response) => {
     if (!callLog) {
       return res.status(404).json({
         transaction: false,
+        code: -3, 
         msg: "CallLog no existe por ese id",
       });
     }
@@ -71,6 +77,7 @@ const updateCallLog = async (req, res = response) => {
     if (callLog.userDevice.toString() !== uid) {
       return res.status(401).json({
         transaction: false,
+        code: -4, 
         msg: "No tiene privilegio de editar este CallLog",
       });
     }
@@ -89,12 +96,14 @@ const updateCallLog = async (req, res = response) => {
 
     return res.json({
       transaction: true,
+      code: 3,
       CallLog: callLogUpdated,
     });
   } catch (error) {
     console.log(error);
     res.status(500).json({
       transaction: false,
+      code: -2, // Excepcion no controllada
       msg: "Excepcion No Controlada, por favor informe al administrador.",
     });
   }

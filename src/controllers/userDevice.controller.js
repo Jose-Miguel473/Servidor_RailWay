@@ -3,19 +3,20 @@ const { generateJWT } = require("../helpers/jwt");
 const UserDevice = require("../models/UserDevice.model");
 
 const getUserDevice = async (req, res = response) => {
-  
   try {
-    const userDevice = await UserDevice.find()
+    const userDevice = await UserDevice.find();
     // const userDevice = await UserDevice.find().populate("userDevice", "nameUser")
 
-    return res.json({
+    return res.status(200).json({
       transaction: true,
+      code: 0, // Respuesta Existosa
       userDevice,
     });
   } catch (error) {
     console.log(error);
     return res.status(500).json({
       transaction: false,
+      code: -2, // Excepcion no controllada
       msg: "Excepcion No Controlada, por favor informe al administrador.",
     });
   }
@@ -28,6 +29,7 @@ const registerUserDevice = async (req, res = response) => {
     if (userDevice) {
       return res.status(400).json({
         transaction: false,
+        code: 2, // Registro existente
         msg: "El ID del dispositivo ya se encuentra registrando.",
       });
     }
@@ -44,14 +46,14 @@ const registerUserDevice = async (req, res = response) => {
 
     return res.status(201).json({
       transaction: true,
-      uid: userDevice.id,
-      name: userDevice.nameUser,
+      code: 1, // La peticion fue correcta
       token,
     });
   } catch (error) {
     console.log(error);
     return res.status(500).json({
       transaction: false,
+      code: -2, // Excepcion no controllada
       msg: "Excepcion No Controlada, por favor informe al administrador.",
     });
   }
@@ -70,14 +72,16 @@ const getNewToken = async (req, res = response) => {
       userDevice.deviceId
     );
 
-    return res.json({
+    return res.status(202).json({
       transaction: true,
+      code: 1, 
       token,
     });
   } catch (error) {
     console.log(error);
     return res.status(500).json({
       transaction: false,
+      code: -2, // Excepcion no controllada
       msg: "Excepcion No Controlada, por favor informe al administrador.",
     });
   }
