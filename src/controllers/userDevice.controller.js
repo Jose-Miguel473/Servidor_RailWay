@@ -40,8 +40,9 @@ const registerUserDevice = async (req, res = response) => {
     // Generate Token
     const token = await generateJWT(
       userDevice.id,
-      userDevice.nameUser,
-      userDevice.deviceId
+      userDevice.deviceId,
+      userDevice.manufacturer,
+      userDevice.model
     );
 
     return res.status(201).json({
