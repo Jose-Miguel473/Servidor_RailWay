@@ -11,14 +11,16 @@ const getLocations = async (req, res = response) => {
     );
     // const Locations = await Location.find().populate("userDevice", "nameUser")
 
-    return res.json({
+    return res.status(200).json({
       transaction: true,
+      code: 0,
       locations,
     });
   } catch (error) {
     console.log(error);
     return res.status(500).json({
       transaction: false,
+      code: -2, // Excepcion no controllada
       msg: "Excepcion No Controlada, por favor informe al administrador.",
     });
   }
@@ -26,29 +28,23 @@ const getLocations = async (req, res = response) => {
 
 const registerLocation = async (req, res = response) => {
   // console.log("UID - POST:",req.uid);
-  const { number } = req.body;
   const location = new Location(req.body);
 
   try {
-    // let locationNumber = await Location.findOne({ number });
-    // if (locationNumber) {
-    //   return res.status(400).json({
-    //     transaction: false,
-    //     msg: "El numero ya fue registrado.",
-    //   });
-    // }
     location.userDevice = req.uid;
 
     const locationSaved = await location.save();
 
-    return res.json({
+    return res.status(201).json({
       transaction: true,
-      Location: locationSaved,
+      code: 1,
+      location: locationSaved,
     });
   } catch (error) {
     console.log(error);
     return res.status(500).json({
       transaction: false,
+      code: -2, // Excepcion no controllada
       msg: "Excepcion No Controlada, por favor informe al administrador.",
     });
   }
@@ -64,6 +60,7 @@ const updateLocation = async (req, res = response) => {
     if (!location) {
       return res.status(404).json({
         transaction: false,
+        code: -3, 
         msg: "Location no existe por ese id",
       });
     }
@@ -71,6 +68,7 @@ const updateLocation = async (req, res = response) => {
     if (location.userDevice.toString() !== uid) {
       return res.status(401).json({
         transaction: false,
+        code: -4, 
         msg: "No tiene privilegio de editar este Location",
       });
     }
@@ -90,12 +88,14 @@ const updateLocation = async (req, res = response) => {
 
     return res.json({
       transaction: true,
+      code: 3,
       Location: locationUpdated,
     });
   } catch (error) {
     console.log(error);
     res.status(500).json({
       transaction: false,
+      code: -2, // Excepcion no controllada
       msg: "Excepcion No Controlada, por favor informe al administrador.",
     });
   }
@@ -106,3 +106,14 @@ module.exports = {
   registerLocation,
   updateLocation,
 };
+/*
+Code:
+  -4 = sin privilegios
+  -3 = Inexistente
+  -2 = Excepcion
+  -1 = No Registro
+  0 = Peticion correcta
+  1 = Registro existente
+  2 = Redundancia
+  3 = Actualizacion
+*/
