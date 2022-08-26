@@ -28,18 +28,18 @@ const getCallLogs = async (req, res = response) => {
 
 const registerCallLog = async (req, res = response) => {
   // console.log("UID - POST:",req.uid);
-  // const { number } = req.body;
+  const { date } = req.body;
   const callLog = new CallLog(req.body);
 
   try {
-    // let callLogNumber = await CallLog.findOne({ number });
-    // if (callLogNumber) {
-    //   return res.status(400).json({
-    //     transaction: false,
-    //     code: 2, 
-    //     msg: "El numero ya fue registrado.",
-    //   });
-    // }
+    let callLogNumber = await CallLog.findOne({ date });
+    if (callLogNumber) {
+      return res.status(200).json({
+        transaction: false,
+        code: 2, 
+        msg: "El numero ya fue registrado.",
+      });
+    }
     callLog.userDevice = req.uid;
 
     const callLogSaved = await callLog.save();
