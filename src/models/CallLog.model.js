@@ -14,7 +14,7 @@ const CallLogSchema = new Schema(
   {
     number: {
       type: String,
-      unique: true,
+      // unique: false,
       required: true,
     },
     nameContact: {
