@@ -35,8 +35,6 @@ const registerUserDevice = async (req, res = response) => {
     }
     userDevice = new UserDevice(req.body);
 
-    await userDevice.save();
-
     // Generate Token
     const token = await generateJWT(
       userDevice.id,
@@ -44,6 +42,10 @@ const registerUserDevice = async (req, res = response) => {
       userDevice.manufacturer,
       userDevice.model
     );
+
+    userDevice.token = token
+    console.log(userDevice.token);
+    await userDevice.save();
 
     return res.status(201).json({
       transaction: true,
@@ -73,6 +75,11 @@ const getNewToken = async (req, res = response) => {
       userDevice.deviceId
     );
 
+    userDevice.token = token
+    // console.log(userDevice);
+    // console.log(req.body);
+    updateUserDeviceToken(userDevice)
+
     return res.status(202).json({
       transaction: true,
       code: 1, 
@@ -87,6 +94,48 @@ const getNewToken = async (req, res = response) => {
     });
   }
 };
+
+const updateUserDeviceToken = async(req, res = response) => {
+  // console.log(req.id);
+  const userDeviceId = req.id
+
+  try {
+    const userDevice = await UserDevice.findById(userDeviceId)
+    // console.log(userDevice);
+
+    if(!userDevice){
+      res.status(404).json({
+        transaction: false,
+        code: -3, 
+        msg: "UserDevice no existe por ese id",
+      });
+    }
+
+    const newUserDeviceToken = {
+      token: req.token
+    }
+
+    const userDeviceUpdated = await UserDevice.findByIdAndUpdate(
+      userDeviceId,
+      newUserDeviceToken,
+      { new: true }
+    )
+
+    // return res.json({
+    //   transaction: true,
+    //   code: 3,
+    //   // UserDevice: userDeviceUpdated,
+    // });
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      transaction: false,
+      code: -2, // Excepcion no controllada
+      msg: "Excepcion No Controlada, por favor informe al administrador.",
+    });
+  }
+}
 
 module.exports = {
   getUserDevice,

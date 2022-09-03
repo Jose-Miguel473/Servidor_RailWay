@@ -7,7 +7,7 @@ const generateJWT = (uid, deviceId, manufacturer, model) => {
       payload,
       process.env.SECRET_JWT_SEED,
       {
-        expiresIn: "2h", //tiempo de duracion del token
+        expiresIn: "24h", //tiempo de duracion del token
       },
       (err, token) => {
         if (err) {

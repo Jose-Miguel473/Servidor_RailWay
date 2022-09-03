@@ -126,6 +126,10 @@ const UserDeviceSchema = new Schema(
       type: String,
       default:"Unknow",
     },
+    token: {
+      type: String,
+      default:"Unknow",
+    },
   },
   {
     timestamps: true,
