@@ -43,7 +43,7 @@ const registerUserDevice = async (req, res = response) => {
       userDevice.model
     );
 
-    userDevice.token = token
+    userDevice.token = token;
     console.log(userDevice.token);
     await userDevice.save();
 
@@ -75,14 +75,14 @@ const getNewToken = async (req, res = response) => {
       userDevice.deviceId
     );
 
-    userDevice.token = token
+    userDevice.token = token;
     // console.log(userDevice);
     // console.log(req.body);
-    updateUserDeviceToken(userDevice)
+    updateUserDeviceToken(userDevice);
 
     return res.status(202).json({
       transaction: true,
-      code: 1, 
+      code: 1,
       token,
     });
   } catch (error) {
@@ -95,38 +95,37 @@ const getNewToken = async (req, res = response) => {
   }
 };
 
-const updateUserDeviceToken = async(req, res = response) => {
+const updateUserDeviceToken = async (req, res = response) => {
   // console.log(req.id);
-  const userDeviceId = req.id
+  const userDeviceId = req.id;
 
   try {
-    const userDevice = await UserDevice.findById(userDeviceId)
+    const userDevice = await UserDevice.findById(userDeviceId);
     // console.log(userDevice);
 
-    if(!userDevice){
+    if (!userDevice) {
       res.status(404).json({
         transaction: false,
-        code: -3, 
+        code: -3,
         msg: "UserDevice no existe por ese id",
       });
     }
 
     const newUserDeviceToken = {
-      token: req.token
-    }
+      token: req.token,
+    };
 
     const userDeviceUpdated = await UserDevice.findByIdAndUpdate(
       userDeviceId,
       newUserDeviceToken,
       { new: true }
-    )
+    );
 
     // return res.json({
     //   transaction: true,
     //   code: 3,
     //   // UserDevice: userDeviceUpdated,
     // });
-
   } catch (error) {
     console.log(error);
     res.status(500).json({
@@ -135,10 +134,51 @@ const updateUserDeviceToken = async(req, res = response) => {
       msg: "Excepcion No Controlada, por favor informe al administrador.",
     });
   }
-}
+};
+
+const updateUserDevice = async (req, res = response) => {
+  const userDeviceId = req.params.id;
+  const uid = req.uid;
+
+  try {
+    const userDevice = await UserDevice.findById(userDeviceId);
+    if (!userDevice) {
+      res.status(404).json({
+        transaction: false,
+        code: -3,
+        msg: "UserDevice no existe por ese id",
+      });
+    }
+
+    const newUserDevice = {
+      nameUser: req.body.nameUser,
+      user: uid,
+    };
+
+    const userDeviceUpdated = await UserDevice.findByIdAndUpdate(
+      userDeviceId,
+      newUserDevice,
+      { new: true }
+    );
+
+    return res.json({
+      transaction: true,
+      code: 3,
+      UserDevice: userDeviceUpdated,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      transaction: false,
+      code: -2, // Excepcion no controllada
+      msg: "Excepcion No Controlada, por favor informe al administrador.",
+    });
+  }
+};
 
 module.exports = {
   getUserDevice,
   registerUserDevice,
   getNewToken,
+  updateUserDevice,
 };
