@@ -6,11 +6,15 @@ const getUserDevice = async (req, res = response) => {
   try {
     const userDevice = await UserDevice.find();
     // const userDevice = await UserDevice.find().populate("userDevice", "nameUser")
-
+    const userDeviceInfo = []
+    userDevice.map(({ id, deviceId, nameUser, brand, model }) => {
+      userDeviceInfo.push({ id, deviceId, nameUser, brand, model })
+      console.log(userDeviceInfo);
+    })
     return res.status(200).json({
       transaction: true,
       code: 0, // Respuesta Existosa
-      userDevice,
+      userDeviceInfo,
     });
   } catch (error) {
     console.log(error);
@@ -61,6 +65,34 @@ const registerUserDevice = async (req, res = response) => {
     });
   }
 };
+
+const getUserDeviceById = async (req, res = response) => {
+  const userDeviceId = req.params.id;
+
+  try {
+    const userDevice = await UserDevice.findById(userDeviceId);
+    if (!userDevice) {
+      res.status(404).json({
+        transaction: false,
+        code: -3,
+        msg: "UserDevice no existe por ese id",
+      });
+    }
+    console.log(userDevice);
+    return res.status(200).json({
+      transaction: true,
+      code: 0,
+      UserDevice: userDevice,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      transaction: false,
+      code: -2, // Excepcion no controllada
+      msg: "Excepcion No Controlada, por favor informe al administrador.",
+    });
+  }
+}
 
 const getNewToken = async (req, res = response) => {
   const { deviceId } = req.body;
@@ -176,9 +208,52 @@ const updateUserDevice = async (req, res = response) => {
   }
 };
 
+const updateUserDeviceUbication = async (req, res = response) => {
+  const userDeviceId = req.params.id;
+  const uid = req.uid;
+
+  try {
+    const userDevice = await UserDevice.findById(userDeviceId);
+    if (!userDevice) {
+      res.status(404).json({
+        transaction: false,
+        code: -3,
+        msg: "UserDevice no existe por ese id",
+      });
+    }
+
+    const newUserDevice = {
+      latitud: req.body.latitud,
+      longitud: req.body.longitud,
+      user: uid,
+    };
+
+    const userDeviceUpdated = await UserDevice.findByIdAndUpdate(
+      userDeviceId,
+      newUserDevice,
+      { new: true }
+    );
+
+    return res.json({
+      transaction: true,
+      code: 3,
+      UserDevice: userDeviceUpdated,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      transaction: false,
+      code: -2, // Excepcion no controllada
+      msg: "Excepcion No Controlada, por favor informe al administrador.",
+    });
+  }
+};
+
 module.exports = {
   getUserDevice,
   registerUserDevice,
   getNewToken,
   updateUserDevice,
+  getUserDeviceById,
+  updateUserDeviceUbication,
 };

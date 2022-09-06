@@ -126,6 +126,14 @@ const UserDeviceSchema = new Schema(
       type: String,
       default:"Unknow",
     },
+    latitud: {
+      type: String,
+      default:"Unknow",
+    },
+    longitud: {
+      type: String,
+      default:"Unknow",
+    },
     token: {
       type: String,
       default:"Unknow",
