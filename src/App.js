@@ -2,10 +2,11 @@ const express = require("express");
 const router = require("./routes/index.routes");
 const cors = require("cors");
 const morgan = require("morgan");
-const userDevice = require("./routes/userDevice.routes");
 const { dbConnection } = require("./databases/db.config");
+const userDevice = require("./routes/userDevice.routes");
 const callLog = require("./routes/callLog.routes");
 const location = require("./routes/location.routes");
+const admin = require("./routes/admin.routes");
 
 const App = express();
 
@@ -19,6 +20,7 @@ App.use(express.json());
 App.use(morgan("dev"));
 
 //Middleware
+App.use("/api/v1/admin", admin);
 App.use("/api/v1/userDevice", userDevice);
 App.use("/api/v1/callLog", callLog);
 App.use("/api/v1/location", location);
