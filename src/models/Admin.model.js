@@ -8,7 +8,7 @@ const AdminSchema = new Schema(
     },
     verification: {
       type: Boolean,
-      default: "Unknow",
+      default: false,
       required: true,
     },
     name: {
@@ -40,4 +40,4 @@ AdminSchema.method("toJSON", function () {
   return object;
 });
 
-module.exports = model("AdminSchema", AdminSchema);
+module.exports = model("Admin", AdminSchema);

@@ -30,10 +30,10 @@ const registerAdmin = async (req, res = response) => {
   try {
     let admin = await Admin.findOne({ email });
     if (admin) {
-      return res.status(400).json({
+      return res.status(200).json({
         transaction: false,
         code: 2, // Registro existente
-        msg: "El ID del dispositivo ya se encuentra registrando.",
+        msg: "El email ya se encuentra registrando.",
       });
     }
     admin = new Admin(req.body);
