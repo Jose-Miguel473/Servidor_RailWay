@@ -5,6 +5,7 @@ const AdminSchema = new Schema(
       type: String,
       default: "Unknow",
       required: true,
+      unique: true,
     },
     verification: {
       type: Boolean,
