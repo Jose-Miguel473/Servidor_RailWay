@@ -54,7 +54,46 @@ const registerAdmin = async (req, res = response) => {
   }
 };
 
+const updateAdmin = async (req, res = response) => {
+  const { email, verification } = req.body;
+  
+  try {
+    let admin = await Admin.findOne({ email });
+    if (!admin) {
+      return res.status(404).json({
+        transaction: false,
+        code: 0, // Registro existente
+        msg: "El email NO se encuentra registrando.",
+      });
+    }
+
+    const newAdmin = {
+      verification
+    };
+
+    const adminUpdated = await Admin.findOneAndUpdate(
+      {email},
+      newAdmin,
+      { new: true }
+    );
+
+    return res.json({
+      transaction: true,
+      code: 3,
+      msg: "Estado de correo electronico actualizado"
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      transaction: false,
+      code: -2, // Excepcion no controllada
+      msg: "Excepcion No Controlada, por favor informe al administrador.",
+    });
+  }
+};
+
 module.exports = {
   getAdmin,
   registerAdmin,
+  updateAdmin
 };
