@@ -4,17 +4,30 @@ const CallLog = require("../models/CallLog.model");
 const getCallLogs = async (req, res = response) => {
   // console.log("UID - GET:",req.uid);
   const userDevice = req.uid;
+
   try {
     const callLogs = await CallLog.find({ userDevice }).populate(
       "userDevice",
       "nameUser"
     );
+    CallInfo = []
     // const callLogs = await CallLog.find().populate("userDevice", "nameUser")
+
+    const sortByDate = (data) => 
+    data.sort (({date: a}, {date: b}) => a < b ? -1 : a > b ? 1 : 0)
+
+    const dateUpdate = sortByDate(callLogs)
+ 
+    dateUpdate.map(({ userDevice,nameContact, number,date}) => {
+      CallInfo.push({ userDevice,nameContact, number,date})
+  })
+  console.log ("fechas ordenadas",CallInfo)
+ 
 
     return res.status(200).json({
       transaction: true,
       code: 0,
-      callLogs,
+      CallInfo,
     });
   } catch (error) {
     console.log(error);
@@ -36,7 +49,7 @@ const registerCallLog = async (req, res = response) => {
     if (callLogNumber) {
       return res.status(200).json({
         transaction: false,
-        code: 2, 
+        code: 2,
         msg: "El numero ya fue registrado.",
       });
     }
@@ -69,7 +82,7 @@ const updateCallLog = async (req, res = response) => {
     if (!callLog) {
       return res.status(404).json({
         transaction: false,
-        code: -3, 
+        code: -3,
         msg: "CallLog no existe por ese id",
       });
     }
@@ -77,7 +90,7 @@ const updateCallLog = async (req, res = response) => {
     if (callLog.userDevice.toString() !== uid) {
       return res.status(401).json({
         transaction: false,
-        code: -4, 
+        code: -4,
         msg: "No tiene privilegio de editar este CallLog",
       });
     }
@@ -114,3 +127,4 @@ module.exports = {
   registerCallLog,
   updateCallLog,
 };
+

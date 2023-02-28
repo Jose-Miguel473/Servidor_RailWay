@@ -11,5 +11,4 @@ const dbConnection = async() => {
     throw new Error('Error a la hora de inicializar BD');
   }
 }
-
 module.exports = {dbConnection}

@@ -7,7 +7,8 @@ const userDevice = require("./routes/userDevice.routes");
 const callLog = require("./routes/callLog.routes");
 const location = require("./routes/location.routes");
 const admin = require("./routes/admin.routes");
-
+const filter = require("./routes/filter.route");
+const order = require("./routes/order.route");
 const App = express();
 
 // Init database
@@ -24,7 +25,8 @@ App.use("/api/v1/admin", admin);
 App.use("/api/v1/userDevice", userDevice);
 App.use("/api/v1/callLog", callLog);
 App.use("/api/v1/location", location);
-
+App.use("/api/v1/filter", filter);
+App.use("/api/v1/order", order);
 App.use(express.static("public"));
 
 // App.use(router);
