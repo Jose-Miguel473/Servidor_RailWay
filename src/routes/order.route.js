@@ -13,6 +13,4 @@ const order = Router();
 order.get("/:id/getAllCall",getAllCall);
 
 
-
-
 module.exports = order;

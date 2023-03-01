@@ -8,17 +8,7 @@ const path = require("path");
 
 
 
-function Comparative(obj1, obj2) {
-  var result = {};
-  for (key in obj1) {
-    if (obj2[key] != obj1[key]) result[key] = obj2[key];
-    if (typeof obj2[key] == 'array' && typeof obj1[key] == 'array')
-      result[key] = arguments.callee(obj1[key], obj2[key]);
-    if (typeof obj2[key] == 'object' && typeof obj1[key] == 'object')
-      result[key] = arguments.callee(obj1[key], obj2[key]);
-  }
-  return result;
-}
+
 
 
 const getUserDeviceById = async (req, res = response) => {
@@ -92,14 +82,6 @@ const getAllCallUser = async (req, res = response) => {
       fs.writeFileSync( filename, JSON.stringify(links));
     });
    
-   
-   
-   
-   
-   
-   
-   
-   
     return res.status(200).json({
       transaction: true,
       code: 0,
@@ -122,25 +104,63 @@ const getAllCallUser = async (req, res = response) => {
 }
 
 const ComparativeCall = async(req, res = reponse) =>{
-
-
-
   try {
 
+    const idUser1 = req.params.id1
+    const idUser2 = req.params.id2
+
+    const filename = "./src/data/"+ idUser1 +".json"
+    const filename2 = "./src/data/" + idUser2 + ".json"
     
-    fs.readFile(obj1, 'utf8', (err, data) => {
-      if (err) console.error(err);
-      const obj1 = JSON.parse(data);
+    const archUser1 = JSON.parse(fs.readFileSync(filename, { encoding: "utf-8" }));
+    const archUser2 = JSON.parse(fs.readFileSync(filename2, { encoding: "utf-8" }));
+  
+   
 
-      console.log(obj1[0].value);
-    });
-
-    console.log(Comparative(obj1,obj2))
+     const compare = (user1 = [], user2 = []) => {
+       const result = [];
+       let count = 0
+    
+       user1.map(({ number: number1, nameContact: nameContact1, userDevice: userDevice1 }) => {
+         user2.map(({ number: number2, nameContact: nameContact2,  userDevice: userDevice2 }) => {
+           if (number1 === number2) {
+             if (nameContact1 === "UNKNOWN" && nameContact2!== "UNKNOWN") {
+                 nameContact1 = nameContact2
+             }
+    
+             if(nameContact1 && nameContact2 !== "UNKNOWN"){
+                 if (nameContact1 !== nameContact2) {
+                     nameContact1 = `${nameContact1}, ${nameContact2}`
+                 }
+             }
+    
+             result.push({
+               description: `Comparativa: ${userDevice1} - ${userDevice2}`,
+               number: `${number1}`.replace("+591", ""),
+               namesContactsFromUsers: `${nameContact1}`,
+             });
+             count +=1
+           }
+         });
+       });
+     
+      return {result,count};
+     };
+    
+     const evalar = (user1 = [], user2 = []) => {
+       if (user1.length >= user2.length) {
+         return compare(user1, user2);
+       } else {
+         return compare(user2, user1);
+       }
+      
+     }; 
+  const resultado = evalar(archUser1,archUser2)
 
     return res.status(200).json({
       transaction: true,
       code: 0,  //Excepcion no controllada
-      obj1
+      resultado
     });
 
 
