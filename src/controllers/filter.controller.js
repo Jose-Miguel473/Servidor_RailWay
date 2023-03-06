@@ -135,7 +135,7 @@ const ComparativeCall = async(req, res = reponse) =>{
              }
     
              result.push({
-               description: `Comparativa: ${userDevice1} - ${userDevice2}`,
+               description: `${userDevice1} - ${userDevice2}`,
                number: `${number1}`.replace("+591", ""),
                namesContactsFromUsers: `${nameContact1}`,
              });
@@ -143,7 +143,12 @@ const ComparativeCall = async(req, res = reponse) =>{
            }
          });
        });
-     
+       
+      result.forEach(user => {
+       const filename = './src/data/'+user.description + '.json'
+       fs.writeFileSync( filename, JSON.stringify(result));
+     });
+
       return {result,count};
      };
     
@@ -155,6 +160,7 @@ const ComparativeCall = async(req, res = reponse) =>{
        }
       
      }; 
+     
   const resultado = evalar(archUser1,archUser2)
 
     return res.status(200).json({

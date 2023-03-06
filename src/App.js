@@ -7,8 +7,8 @@ const userDevice = require("./routes/userDevice.routes");
 const callLog = require("./routes/callLog.routes");
 const location = require("./routes/location.routes");
 const admin = require("./routes/admin.routes");
-const filter = require("./routes/filter.route");
-const order = require("./routes/order.route");
+const filter = require("./routes/filter.routes");
+const order = require("./routes/order.routes");
 const App = express();
 
 // Init database
