@@ -11,8 +11,7 @@ const getCallLogs = async (req, res = response) => {
       "nameUser"
     );
     CallInfo = []
-    // const callLogs = await CallLog.find().populate("userDevice", "nameUser")
-
+    
     const sortByDate = (data) => 
     data.sort (({date: a}, {date: b}) => a < b ? -1 : a > b ? 1 : 0)
 
@@ -21,8 +20,9 @@ const getCallLogs = async (req, res = response) => {
     dateUpdate.map(({ userDevice,nameContact, number,date}) => {
       CallInfo.push({ userDevice,nameContact, number,date})
   })
+
   console.log ("fechas ordenadas",CallInfo)
- 
+
 
     return res.status(200).json({
       transaction: true,
@@ -128,4 +128,3 @@ module.exports = {
   registerCallLog,
   updateCallLog,
 };
-

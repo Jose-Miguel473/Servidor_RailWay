@@ -1,31 +1,24 @@
 [
   {
+    "userDevice": "63237b033916cc371e8456af",
+    "nameContact": "Veronica Sasha",
+    "number": "70799692",
+    "duration": "0",
+    "date": "15/09/22 - 13:59:22"
+  },
+  {
     "userDevice": "63237a9d3916cc371e845506",
-    "nameContact": "Dennis ING. COMERCIAL",
+    "nameContact": "Dennis F. DDE COMERCIAL",
     "number": "+59172735735",
     "duration": "15",
     "date": "14/09/22 - 15:42:13"
   },
   {
     "userDevice": "63237a9d3916cc371e845506",
-    "nameContact": "Gino Panozo",
+    "nameContact": "UNKNOWN",
     "number": "61598269",
     "duration": "0",
     "date": "15/09/22 - 09:48:21"
-  },
-  {
-    "userDevice": "63237a9d3916cc371e845506",
-    "nameContact": "Carlos",
-    "number": "67501540",
-    "duration": "0",
-    "date": "15/09/22 - 09:45:16"
-  },
-  {
-    "userDevice": "63237b033916cc371e8456af",
-    "nameContact": "Veronica Sasha",
-    "number": "+59170799692",
-    "duration": "0",
-    "date": "15/09/22 - 13:59:22"
   },
   {
     "userDevice": "63237b033916cc371e8456af",
@@ -44,16 +37,9 @@
   {
     "userDevice": "63237b033916cc371e8456af",
     "nameContact": "Michel Calustro",
-    "number": "+59162660165",
+    "number": "62660165",
     "duration": "0",
     "date": "15/09/22 - 12:04:50"
-  },
-  {
-    "userDevice": "63237b033916cc371e8456af",
-    "nameContact": "JDC Mayor Rios",
-    "number": "+59167349078",
-    "duration": "0",
-    "date": "15/09/22 - 12:05:48"
   },
   {
     "userDevice": "63237b033916cc371e8456af",
@@ -148,13 +134,6 @@
   },
   {
     "userDevice": "63237b033916cc371e8456af",
-    "nameContact": "Rebeca Florido",
-    "number": "+59171782966",
-    "duration": "75",
-    "date": "07/10/22 - 18:49:25"
-  },
-  {
-    "userDevice": "63237b033916cc371e8456af",
     "nameContact": "UNKNOWN",
     "number": "75901671",
     "duration": "23",
@@ -198,16 +177,9 @@
   {
     "userDevice": "63237b033916cc371e8456af",
     "nameContact": "Dra. Fta. Nicole Torrez",
-    "number": "+59165319291",
+    "number": "65319291",
     "duration": "0",
     "date": "28/09/22 - 12:41:52"
-  },
-  {
-    "userDevice": "63237b033916cc371e8456af",
-    "nameContact": "Dra. Fta. Nicole Torrez",
-    "number": "65319291",
-    "duration": "66",
-    "date": "29/09/22 - 07:31:03"
   },
   {
     "userDevice": "63237b033916cc371e8456af",
