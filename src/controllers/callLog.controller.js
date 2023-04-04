@@ -15,11 +15,16 @@ const getCallLogs = async (req, res = response) => {
     const sortByDate = (data) => 
     data.sort (({date: a}, {date: b}) => a < b ? -1 : a > b ? 1 : 0)
 
+   
     const dateUpdate = sortByDate(callLogs)
  
-    dateUpdate.map(({ userDevice,nameContact, number,date}) => {
-      CallInfo.push({ userDevice,nameContact, number,date})
+    dateUpdate.map(({ userDevice,id,nameContact,duration,type,typeRaw,number,date}) => {
+      CallInfo.push({ userDevice,id,nameContact,duration,type,typeRaw,number,date})
   })
+
+   
+  
+
 
   console.log ("fechas ordenadas",CallInfo)
 
