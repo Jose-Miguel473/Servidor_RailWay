@@ -11,9 +11,13 @@ const { userInfo } = require("os");
 function OneContact(CallInfo){
   var number = {}
   var calls = CallInfo.filter(function (e) {
-    return number[e.userDevice] ? false : (number[e.userDevice] = true);
+    return number[e.number] ? false : (number[e.number] = true);
   });
   return calls
+}
+const OrderforSort = (data) => {
+  data.sort (({userDevice: a}, {userDevice: b}) => a < b ? -1 : a > b ? 1 : 0)
+return data
 }
 
  function OneTarget(CallInfo){
@@ -24,48 +28,7 @@ function OneContact(CallInfo){
    return calls
  }
 
- function OnseSource(CallInfo){
-  var number = {}
-  var calls = CallInfo.filter(function (e) {
-    return number[e.source] ? false : (number[e.source] = true);
-  });
-  return calls
-}
-const compare = (user1 = [], user2 = []) => {
-  const result = [];
-  let count = 0
 
-  user1.map(({ number: number1, nameContact: nameContact1, userDevice: userDevice1 }) => {
-    user2.map(({ number: number2, nameContact: nameContact2,  userDevice: userDevice2 }) => {
-      if (number1 === number2) {
-        if (nameContact1 === "UNKNOWN" && nameContact2!== "UNKNOWN") {
-            nameContact1 = `${nameContact1}`
-        }
-
-        if(nameContact1 && nameContact2 !== "UNKNOWN"){
-            if (nameContact1 !== nameContact2) {
-                nameContact1 = `${nameContact1}, ${nameContact2}`
-            }
-        }
-
-        result.push({
-          description: `${userDevice1} - ${userDevice2}`,
-          number: `${number1}`.replace("+591", ""),
-          namesContactsFromUsers: `${nameContact1}, ${nameContact2}`,
-        });
-        count +=1
-      }
-    });
-  });
-
- return {result,count};
-};
-
-
-const OrderforSort = (data) => {
-       data.sort (({userDevice: a}, {userDevice: b}) => a < b ? -1 : a > b ? 1 : 0)
-    return data
-}
 
 
 const getUserDeviceById = async (req, res = response) => {
@@ -126,6 +89,8 @@ const getAllUser = async (req, res = response) => {
       target: `${number}`.replace("+591",""),
     });
   })
+
+
 
   var ContactOrder = OneContact(nodos)
   
@@ -217,21 +182,38 @@ const ComparativeCall = async(req, res = reponse) =>{
     const archUser1 = JSON.parse(fs.readFileSync(filename, { encoding: "utf-8" }));
     const archUser2 = JSON.parse(fs.readFileSync(filename2, { encoding: "utf-8" }));
 
-     const Assess = (user1 = [], user2 = []) => {
-       if (user1.length >= user2.length) {
-         return compare(user1, user2);
-       } else {
-         return compare(user2, user1);
-       }
-      
-     }; 
-     
-  const resultado = Assess(archUser1,archUser2)
-
-    return res.status(200).json({
+    const result = [];
+    let count = 0
+    
+       archUser1.map(({ number: number1, nameContact: nameContact1, userDevice: userDevice1 }) => {
+         archUser2.map(({ number: number2, nameContact: nameContact2,  userDevice: userDevice2 }) => {
+          
+           if (number1 === number2) {
+             if (nameContact1 === "UNKNOWN" && nameContact2!== "UNKNOWN") {
+                 nameContact1 = `${nameContact1}`  
+             }
+    
+             if(nameContact1 && nameContact2 !== "UNKNOWN"){
+                 if (nameContact1 !== nameContact2) {
+                     nameContact1 = `${nameContact1}`
+                 }
+             }
+    
+             result.push({
+               userInfo: `${userDevice1} - ${userDevice2}`,
+               number: `${number1}`.replace("+591", ""),
+               namesContactsFromUsers: `${nameContact1}, ${nameContact2}`,
+             });
+             count +=1
+           }
+          
+         }); 
+       });
+    
+  return res.status(200).json({
       transaction: true,
-      code: 0,  //Excepcion no controllada
-      resultado
+      code: 0,  //Excepcion controllada
+      result
     });
 
 
