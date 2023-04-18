@@ -28,6 +28,25 @@ return data
    return calls
  }
 
+ const getCallLogs = async (userDevice) => {
+  const CallLogs = await CallLog.find({ userDevice })
+  const CallInfo = []
+  let totalDuration = 0
+
+  CallLogs.map(({ userDevice, nameContact, number, duration, date, type }) => {
+          
+    CallInfo.push({ 
+      userDevice: `${userDevice}`,
+      nameContact: `${nameContact}`,
+      number: `${number}`.replace("+591",""),
+      duration: `${duration}`,
+      type:`${type}`,
+      date:`${date}`
+    })
+  
+  })
+  return OneContact(CallInfo)
+}
 
 
 
@@ -117,72 +136,17 @@ const getAllUser = async (req, res = response) => {
 
 }
 
-
-const getAllCallUser = async (req, res = response) => {
-
-  const userDevice = req.params.id
-  
-
-  try {
-
-    const CallLogs = await CallLog.find({ userDevice })
-   
-
-    const CallInfo = []
- 
-   
-    CallLogs.map(({ userDevice, nameContact, number, duration, date }) => {
-      CallInfo.push({ userDevice: `${userDevice}`,
-      nameContact: `${nameContact}`,
-      number: `${number}`.replace("+591",""),
-      duration: `${duration}`,
-      date: `${date}`})
-      
-    })
-
-  
-  calls = OneContact(CallInfo)
-
-    calls.forEach(call => {
-      const filename = './src/data/'+call.userDevice + '.json'
-      fs.writeFileSync( filename, JSON.stringify(calls));
-    });
-   
-   
-    return res.status(200).json({
-      transaction: true,
-      code: 0,
-      calls
-    })
-
-  }
-
-
-  catch (error) {
-    console.log(error);
-    return res.status(500).json({
-      transaction: false,
-      code: -2,  //Excepcion no controllada
-      msg: "Excepcion No Controlada, por favor informe al administrador.",
-    });
-
-  }
-
-}
-
 const ComparativeCall = async(req, res = reponse) =>{
   try {
 
     const idUser1 = req.params.id1
     const idUser2 = req.params.id2
 
-    const filename = "./src/data/"+ idUser1 +".json"
-    const filename2 = "./src/data/" + idUser2 + ".json"
+    const archUser1 = await getCallLogs(idUser1)
+    const archUser2 = await getCallLogs(idUser2)
     
-    const archUser1 = JSON.parse(fs.readFileSync(filename, { encoding: "utf-8" }));
-    const archUser2 = JSON.parse(fs.readFileSync(filename2, { encoding: "utf-8" }));
-
     const result = [];
+    
     let count = 0
     
        archUser1.map(({ number: number1, nameContact: nameContact1, userDevice: userDevice1 }) => {
@@ -200,9 +164,12 @@ const ComparativeCall = async(req, res = reponse) =>{
              }
     
              result.push({
-               userInfo: `${userDevice1} - ${userDevice2}`,
-               number: `${number1}`.replace("+591", ""),
-               namesContactsFromUsers: `${nameContact1}, ${nameContact2}`,
+               userID1: `${userDevice1}`  ,
+               number1: `${number1}`.replace("+591", ""),
+               namesContactsFromUsers1: `${nameContact1}`, 
+               userID2: `${userDevice2}`,
+               number2: `${number2}`.replace("+591", ""),
+               namesContactsFromUsers2: `${nameContact2}`,
              });
              count +=1
            }
@@ -232,6 +199,6 @@ const ComparativeCall = async(req, res = reponse) =>{
 module.exports = {
   getUserDeviceById,
   getAllUser,
-  getAllCallUser,
+  // getAllCallUser,
   ComparativeCall,
 }

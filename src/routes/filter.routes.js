@@ -5,7 +5,7 @@ const { isDate } = require("../helpers/isDate");
 const { validateFields } = require("../middlewares/validateFields");
 const { validationJWT } = require("../middlewares/validationJWT");
 const {
-  getUserDeviceById, getAllUser,getAllCallUser,ComparativeCall
+  getUserDeviceById, getAllUser,ComparativeCall
 } = require("../controllers/filter.controller");
 
 const filter = Router();
@@ -14,7 +14,7 @@ const filter = Router();
 filter.get("/getUserDeviceById", getUserDeviceById);
 filter.get("/getAllUser", getAllUser);
 filter.get("/:id1/:id2/ComparativeCall",ComparativeCall)
-filter.get("/:id/getAllCallUser", getAllCallUser);
+// filter.get("/:id/getAllCallUser", getAllCallUser);
 
 
 module.exports = filter;
