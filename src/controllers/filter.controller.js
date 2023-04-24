@@ -122,7 +122,7 @@ const getAllUser = async (req, res = response) => {
   const data = {
     nodes: node,
     links: links
-    
+
   }
  
     fs.writeFileSync('./src/data/datosGeneral.json', JSON.stringify(data));

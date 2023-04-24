@@ -41,4 +41,4 @@ Donde la variables de entornos son:
 - PORT: puerto de salida para la URL 
 - MONGODB_URI = direccion URL para la conexion con la base de datos MongoDB
 - MONGODB_URI_TEST = direccion URL para la conexion con la base de datos MongoDB en localhost
-- SECRET_JWT_SEED = palabra o frase secreta para la creacion de JsonWebToken
+- SECRET_JWT_SEED = palabra o frase secreta para la creacion de JsonWebToken# bookish-succotash
