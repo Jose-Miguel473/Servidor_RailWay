@@ -92,7 +92,7 @@ const getAllUser = async (req, res = response) => {
      name:`${nameUser}`,
   });
 }) 
-       const nodoUpdate = OrderforSort(Calls)
+       const nodoUpdate = OneContact(Calls)
        const linkUpdate = OrderforSort(Calls)
           
        nodoUpdate.map(({nameContact,number}) => {
@@ -102,22 +102,40 @@ const getAllUser = async (req, res = response) => {
        });
      }) 
 
-  linkUpdate.map(({userDevice, number}) => {
+
+const callCounts = {};
+
+Calls.forEach(({number, type}) => {
+  // Verificar si el número de origen y destino son iguales
+  if (number === number && type == "OUTGOING_TYPE" || type == "INCOMING_TYPE" ) {
+    // Incrementar el contador correspondiente
+    const phoneNumber = `${number}`.replace("+591", "");
+    callCounts[phoneNumber] = callCounts[phoneNumber] || 0;
+    callCounts[phoneNumber]++;
+  }
+});
+
+
+  linkUpdate.map(({userDevice, number,type}) => {
+    const source = `${number}`.replace("+591","");
+    const callCount = callCounts[source] || 0;
+    
     link.push({ 
       source:`${userDevice}`,
       target: `${number}`.replace("+591",""),
+      count: callCount
     });
   })
 
 
 
-  var ContactOrder = OneContact(nodos)
+  var ContactOrder = nodos
   
 
   var node = ContactOrder.concat(user)
   var links = OneTarget(link) 
  
-  
+  console.log(ContactOrder)
   
   const data = {
     nodes: node,
@@ -125,13 +143,13 @@ const getAllUser = async (req, res = response) => {
 
   }
  
-    fs.writeFileSync('./src/data/datosGeneral.json', JSON.stringify(data));
+    //fs.writeFileSync('./src/data/datosGeneral.json', JSON.stringify(data));
  
 
   return res.status(200).json({
     transaction: true,
     code: 0, // Respuesta Existosa
-    node,
+    data,
   });
 
 }
