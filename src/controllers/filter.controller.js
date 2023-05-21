@@ -5,7 +5,7 @@ const CallLog = require("../models/CallLog.model");
 const { calculateObjectSize } = require("bson");
 const path = require("path");
 const { userInfo } = require("os");
-//const callLog = require("../routes/callLog.routes");
+
 
 
 function OneContact(CallInfo){
@@ -15,6 +15,7 @@ function OneContact(CallInfo){
   });
   return calls
 }
+
 const OrderforSort = (data) => {
   data.sort (({userDevice: a}, {userDevice: b}) => a < b ? -1 : a > b ? 1 : 0)
 return data
@@ -27,6 +28,40 @@ return data
    });
    return calls
  }
+
+ const getComparativeCall = async (idUser1, idUser2) => {
+    
+  const result = [];
+    let count = 0;
+    
+    archUser1.forEach(({ number: number1, nameContact: nameContact1, userDevice: userDevice1 }) => {
+      archUser2.forEach(({ number: number2, nameContact: nameContact2, userDevice: userDevice2 }) => {
+        if (number1 === number2) {
+          if (nameContact1 === "UNKNOWN" && nameContact2 !== "UNKNOWN") {
+            nameContact1 = `${nameContact1}`;
+          }
+    
+          if (nameContact1 && nameContact2 !== "UNKNOWN") {
+            if (nameContact1 !== nameContact2) {
+              nameContact1 = `${nameContact1}`;
+            }
+          }
+    
+          result.push({
+            source: `${userDevice1}`,
+            target: `${number1}`.replace("+591", ""),
+            namesContactsFromUsers1: `${nameContact1}`,
+          });
+          count += 1;
+        }
+      });
+    });
+    
+    const resultComparative = OneContact(result);
+    return resultComparative
+};
+
+
 
  const getCallLogs = async (userDevice) => {
   const CallLogs = await CallLog.find({ userDevice })
@@ -45,7 +80,7 @@ return data
     })
   
   })
-  return OneContact(CallInfo)
+  return CallInfo
 }
 
 
@@ -79,6 +114,7 @@ const getUserDeviceById = async (req, res = response) => {
 
 const getAllUser = async (req, res = response) => {
 
+ try{ 
   const User = await UserDevice.find()
   const Calls = await CallLog.find()
   
@@ -115,43 +151,69 @@ Calls.forEach(({number, type}) => {
   }
 });
 
+const allContacts = [];
+User.forEach(({ _id }) => {
+  const contacts = Calls.filter(call => call.userDevice === _id.toString());
+  allContacts.push(...contacts.map(({ number }) => number));
+});
 
-  linkUpdate.map(({userDevice, number,type}) => {
+// Comparar los contactos entre los usuarios
+const sharedContacts = [];
+for (let i = 0; i < User.length; i++) {
+  const { _id } = User[i];
+  const userContacts = Calls.filter(call => call.userDevice === _id.toString());
+  for (let j = i + 1; j < User.length; j++) {
+    const { _id: otherUserId } = User[j];
+    const otherUserContacts = Calls.filter(call => call.userDevice === otherUserId.toString());
+    for (const contact of userContacts) {
+      if (otherUserContacts.find(c => c.number === contact.number)) {
+        sharedContacts.push(contact.number);
+      }
+    }
+  }
+}
+
+// Añadir los contactos compartidos al arreglo "link"
+
+  
+linkUpdate.map(({userDevice, number,type}) => {
     const source = `${number}`.replace("+591","");
     const callCount = callCounts[source] || 0;
-    
+    if (type !== "REJECTED_TYPE" && type !== "MISSED_TYPE"){
     link.push({ 
       source:`${userDevice}`,
       target: `${number}`.replace("+591",""),
+      type: `${type}`,
       count: callCount
     });
+  }
   })
 
-
-
-  var ContactOrder = nodos
-  
+ const ContactOrder = nodos
+ const ContacLink = OneTarget(link)
 
   var node = ContactOrder.concat(user)
-  var links = OneTarget(link) 
+  var links = ContacLink.concat(sharedContacts) 
  
-  console.log(ContactOrder)
-  
   const data = {
     nodes: node,
     links: links
 
   }
- 
-    //fs.writeFileSync('./src/data/datosGeneral.json', JSON.stringify(data));
- 
-
   return res.status(200).json({
     transaction: true,
     code: 0, // Respuesta Existosa
     data,
   });
-
+ }
+ catch (error) {
+  console.log(error);
+  return res.status(500).json({
+    transaction: false,
+    code: -2,  //Excepcion no controllada
+    msg: "Excepcion No Controlada, por favor informe al administrador.",
+  });
+}
 }
 
 const ComparativeCall = async(req, res = reponse) =>{
@@ -163,6 +225,8 @@ const ComparativeCall = async(req, res = reponse) =>{
     const archUser1 = await getCallLogs(idUser1)
     const archUser2 = await getCallLogs(idUser2)
     
+    const userDevice = await CallLog.findById(idUser1);
+    const userDevices2 = await CallLog.findById(idUser2)
     const result = [];
     
     let count = 0
@@ -172,13 +236,13 @@ const ComparativeCall = async(req, res = reponse) =>{
           
            if (number1 === number2) {
              if (nameContact1 === "UNKNOWN" && nameContact2!== "UNKNOWN") {
-                 nameContact1 = `${nameContact1}`  
+                 nameContact1 = `${nameContact1}`    
              }
     
              if(nameContact1 && nameContact2 !== "UNKNOWN"){
                  if (nameContact1 !== nameContact2) {
                      nameContact1 = `${nameContact1}`
-                 }
+                    }
              }
     
              result.push({
@@ -191,14 +255,15 @@ const ComparativeCall = async(req, res = reponse) =>{
              });
              count +=1
            }
-          
-         }); 
+         });
+         
        });
-    
+       const resultComparative = OneContact(result) 
+
   return res.status(200).json({
       transaction: true,
       code: 0,  //Excepcion controllada
-      result
+      resultComparative
     });
 
 
@@ -217,6 +282,5 @@ const ComparativeCall = async(req, res = reponse) =>{
 module.exports = {
   getUserDeviceById,
   getAllUser,
-  // getAllCallUser,
   ComparativeCall,
 }
