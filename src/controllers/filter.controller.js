@@ -175,7 +175,7 @@ for (let i = 0; i < User.length; i++) {
 
 // Añadir los contactos compartidos al arreglo "link"
 
-  
+const ContactUnion = OneContact(sharedContacts) 
 linkUpdate.map(({userDevice, number,type}) => {
     const source = `${number}`.replace("+591","");
     const callCount = callCounts[source] || 0;
@@ -193,7 +193,7 @@ linkUpdate.map(({userDevice, number,type}) => {
  const ContacLink = OneTarget(link)
 
   var node = ContactOrder.concat(user)
-  var links = ContacLink.concat(sharedContacts) 
+  var links = ContacLink.concat(ContactUnion) 
  
   const data = {
     nodes: node,
