@@ -30,7 +30,10 @@ return data
  }
 
  const getComparativeCall = async (idUser1, idUser2) => {
-    
+   
+  
+  const archUser1 = await getCallLogs(idUser1)
+  const archUser2 = await getCallLogs(idUser2)
   const result = [];
     let count = 0;
     
@@ -51,14 +54,16 @@ return data
             source: `${userDevice1}`,
             target: `${number1}`.replace("+591", ""),
             namesContactsFromUsers1: `${nameContact1}`,
+            // userID2: `${userDevice2}`,
+            // number2: `${number2}`.replace("+591", ""),
+            // namesContactsFromUsers2: `${nameContact2}`,
           });
           count += 1;
         }
       });
     });
-    
-    const resultComparative = OneContact(result);
-    return resultComparative
+  
+    return result
 };
 
 
@@ -121,6 +126,8 @@ const getAllUser = async (req, res = response) => {
   const nodos = []
   const link = []
   const user = []
+  const result = []
+  
 
   User.map(({ _id,nameUser}) => {
     user.push({
@@ -138,7 +145,18 @@ const getAllUser = async (req, res = response) => {
        });
      }) 
 
-
+     for (let i = 0; i < user.length; i++) {
+      const userId1 = user[i].userDevice; // Obtén la ID del primer usuario
+  
+      // Recorrer los usuarios restantes
+      for (let j = i + 1; j < user.length; j++) {
+        const userId2 = user[j].userDevice; // Obtén la ID del segundo usuario
+    
+        const ComparativeContacts =  await getComparativeCall(userId1, userId2);
+        result.push(ComparativeContacts)
+      }
+    }
+    
 const callCounts = {};
 
 Calls.forEach(({number, type}) => {
@@ -151,31 +169,6 @@ Calls.forEach(({number, type}) => {
   }
 });
 
-const allContacts = [];
-User.forEach(({ _id }) => {
-  const contacts = Calls.filter(call => call.userDevice === _id.toString());
-  allContacts.push(...contacts.map(({ number }) => number));
-});
-
-// Comparar los contactos entre los usuarios
-const sharedContacts = [];
-for (let i = 0; i < User.length; i++) {
-  const { _id } = User[i];
-  const userContacts = Calls.filter(call => call.userDevice === _id.toString());
-  for (let j = i + 1; j < User.length; j++) {
-    const { _id: otherUserId } = User[j];
-    const otherUserContacts = Calls.filter(call => call.userDevice === otherUserId.toString());
-    for (const contact of userContacts) {
-      if (otherUserContacts.find(c => c.number === contact.number)) {
-        sharedContacts.push(contact.number);
-      }
-    }
-  }
-}
-
-// Añadir los contactos compartidos al arreglo "link"
-
-const ContactUnion = OneContact(sharedContacts) 
 linkUpdate.map(({userDevice, number,type}) => {
     const source = `${number}`.replace("+591","");
     const callCount = callCounts[source] || 0;
@@ -189,12 +182,14 @@ linkUpdate.map(({userDevice, number,type}) => {
   }
   })
 
- const ContactOrder = nodos
+ const ContactOrder = OneContact(nodos)
  const ContacLink = OneTarget(link)
+ const OneResult = OneTarget(result)
 
   var node = ContactOrder.concat(user)
-  var links = ContacLink.concat(ContactUnion) 
+  var links = ContacLink.concat(OneResult)
  
+
   const data = {
     nodes: node,
     links: links
@@ -225,8 +220,6 @@ const ComparativeCall = async(req, res = reponse) =>{
     const archUser1 = await getCallLogs(idUser1)
     const archUser2 = await getCallLogs(idUser2)
     
-    const userDevice = await CallLog.findById(idUser1);
-    const userDevices2 = await CallLog.findById(idUser2)
     const result = [];
     
     let count = 0
