@@ -182,7 +182,7 @@ linkUpdate.map(({userDevice, number,type}) => {
   }
   })
 
- const ContactOrder = OneContact(nodos)
+ const ContactOrder = nodos
  const ContacLink = OneTarget(link)
  const OneResult = OneTarget(result)
 
@@ -195,6 +195,9 @@ linkUpdate.map(({userDevice, number,type}) => {
     links: links
 
   }
+
+  //fs.writeFileSync('./src/data/datosGeneral.json', JSON.stringify(data));
+
   return res.status(200).json({
     transaction: true,
     code: 0, // Respuesta Existosa
