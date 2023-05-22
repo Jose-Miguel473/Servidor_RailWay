@@ -37,6 +37,19 @@ return data
   const result = [];
     let count = 0;
     
+
+    const callCounts = {};
+
+Calls.forEach(({number, type}) => {
+  // Verificar si el número de origen y destino son iguales
+  if (number === number && type == "OUTGOING_TYPE" || type == "INCOMING_TYPE" ) {
+    // Incrementar el contador correspondiente
+    const phoneNumber = `${number}`.replace("+591", "");
+    callCounts[phoneNumber] = callCounts[phoneNumber] || 0;
+    callCounts[phoneNumber]++;
+  }
+});
+
     archUser1.forEach(({ number: number1, nameContact: nameContact1, userDevice: userDevice1 }) => {
       archUser2.forEach(({ number: number2, nameContact: nameContact2, userDevice: userDevice2 }) => {
         if (number1 === number2) {
@@ -55,6 +68,7 @@ return data
             target: `${userDevice1}`,
             namesContactsFromUsers1: `${nameContact1}`,
             namesContactsFromUsers2: `${nameContact2}`,
+            count: callCounts,
           });
 
           result.push({
@@ -62,6 +76,7 @@ return data
             target: `${userDevice2}`,
             namesContactsFromUsers1: `${nameContact1}`,
             namesContactsFromUsers2: `${nameContact2}`,
+            count: callCounts,
           });
         }
           count += 1;
@@ -164,7 +179,7 @@ const getAllUser = async (req, res = response) => {
         
       }
     }
-//console.log(result)
+
 const callCounts = {};
 
 Calls.forEach(({number, type}) => {
