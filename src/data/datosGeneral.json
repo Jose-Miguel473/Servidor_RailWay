@@ -2441,62 +2441,65 @@
         {
             "source": "71424230",
             "target": "63237ac23916cc371e845535",
+            "count": 6,
             "namesContactsFromUsers1": "Max",
             "namesContactsFromUsers2": "Max X"
         },
         {
             "source": "71424230",
             "target": "63498e1a65f4401d8b5019e0",
+            "count": 6,
             "namesContactsFromUsers1": "Max",
             "namesContactsFromUsers2": "Max X"
         },
         {
             "source": "71532664",
             "target": "63498e3265f4401d8b5019e6",
+            "count": 44,
             "namesContactsFromUsers1": "Cap Inturias",
             "namesContactsFromUsers2": "Don Jhon"
         },
         {
             "source": "67349078",
             "target": "63237a9d3916cc371e845506",
+            "count": 10,
             "namesContactsFromUsers1": "Mayor Rios",
             "namesContactsFromUsers2": "My Ríos EMI"
         },
         {
             "source": "67349078",
             "target": "63237b033916cc371e8456af",
+            "count": 10,
             "namesContactsFromUsers1": "Mayor Rios",
             "namesContactsFromUsers2": "UNKNOWN"
         },
         {
             "source": "103",
             "target": "634db7aa3510de561f86f3e0",
+            "count": 3,
             "namesContactsFromUsers1": "Atencion al Cliente",
             "namesContactsFromUsers2": "Atencion al Cliente"
         },
         {
             "source": "67349078",
             "target": "634db8ae3510de561f86f406",
+            "count": 10,
             "namesContactsFromUsers1": "Mayor Rios",
             "namesContactsFromUsers2": "Camilo Rios"
         },
         {
             "source": "71532664",
             "target": "6349966365f4401d8b501c9e",
+            "count": 44,
             "namesContactsFromUsers1": "Cap Inturias",
             "namesContactsFromUsers2": "UNKNOWN"
         },
         {
             "source": "*105",
             "target": "634cfd5c6ca7c00c4008cc4f",
+            "count": 70,
             "namesContactsFromUsers1": "Consulta Saldo",
             "namesContactsFromUsers2": "Consulta Saldo"
-        },
-        {
-            "source": "72297761",
-            "target": "6321f9e3f3f13693b06b17b5",
-            "namesContactsFromUsers1": "Oscar",
-            "namesContactsFromUsers2": "Oscar"
         }
     ]
 }

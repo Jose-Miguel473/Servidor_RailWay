@@ -31,7 +31,7 @@ return data
 
  const getComparativeCall = async (idUser1, idUser2) => {
    
-  
+  const Calls = await CallLog.find()
   const archUser1 = await getCallLogs(idUser1)
   const archUser2 = await getCallLogs(idUser2)
   const result = [];
@@ -40,7 +40,7 @@ return data
 
     const callCounts = {};
 
-Calls.forEach(({number, type}) => {
+  Calls.forEach(({number, type}) => {
   // Verificar si el número de origen y destino son iguales
   if (number === number && type == "OUTGOING_TYPE" || type == "INCOMING_TYPE" ) {
     // Incrementar el contador correspondiente
@@ -50,8 +50,8 @@ Calls.forEach(({number, type}) => {
   }
 });
 
-    archUser1.forEach(({ number: number1, nameContact: nameContact1, userDevice: userDevice1 }) => {
-      archUser2.forEach(({ number: number2, nameContact: nameContact2, userDevice: userDevice2 }) => {
+    archUser1.forEach(({ number: number1, nameContact: nameContact1, userDevice: userDevice1,type:type }) => {
+      archUser2.forEach(({ number: number2, nameContact: nameContact2, userDevice: userDevice2,type:type }) => {
         if (number1 === number2) {
           if (nameContact1 === "UNKNOWN" && nameContact2 !== "UNKNOWN") {
             nameContact1 = `${nameContact1}`;
@@ -63,22 +63,29 @@ Calls.forEach(({number, type}) => {
             }
           }
           if(archUser1 !== null && archUser2 !== null){
+            const source = `${number1}`.replace("+591","");
+            const callCount1 = callCounts[source] || 0;
+          if (type !== "REJECTED_TYPE" && type !== "MISSED_TYPE"){
           result.push({
             source: `${number1}`.replace("+591", ""),
             target: `${userDevice1}`,
+            count: callCount1,
             namesContactsFromUsers1: `${nameContact1}`,
             namesContactsFromUsers2: `${nameContact2}`,
-            count: callCounts,
+            
           });
-
+          const source = `${number2}`.replace("+591","");
+          const callCount2 = callCounts[source] || 0;
           result.push({
             source: `${number2}`.replace("+591", ""),
             target: `${userDevice2}`,
+            count: callCount2,
             namesContactsFromUsers1: `${nameContact1}`,
             namesContactsFromUsers2: `${nameContact2}`,
-            count: callCounts,
+            
           });
         }
+      }
           count += 1;
         }
       });
