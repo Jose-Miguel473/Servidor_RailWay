@@ -29,70 +29,113 @@ return data
    return calls
  }
 
- const getComparativeCall = async (idUser1, idUser2) => {
+//  const getComparativeCall = async (idUser1, idUser2) => {
    
-  const Calls = await CallLog.find()
-  const archUser1 = await getCallLogs(idUser1)
-  const archUser2 = await getCallLogs(idUser2)
+//   const Calls = await CallLog.find()
+//   const archUser1 = await getCallLogs(idUser1)
+//   const archUser2 = await getCallLogs(idUser2)
+//   const result = [];
+//   let count = 0;
+
+
+
+//     archUser1.forEach(({ number: number1, nameContact: nameContact1, userDevice: userDevice1,type:type }) => {
+//       archUser2.forEach(({ number: number2, nameContact: nameContact2, userDevice: userDevice2,type:type }) => {
+//         if (number1 === number2) {
+//           if (nameContact1 === "UNKNOWN" && nameContact2 !== "UNKNOWN") {
+//             nameContact1 = `${nameContact1}`;
+//           }
+    
+//           if (nameContact1 && nameContact2 !== "UNKNOWN") {
+//             if (nameContact1 !== nameContact2) {
+//               nameContact1 = `${nameContact1}`;
+//             }
+//           }
+//         const callCount1 = Calls.filter(({ number, type }) => number === number1 && type !== "REJECTED_TYPE" && type !== "MISSED_TYPE").length;
+//         const callCount2 = Calls.filter(({ number, type }) => number === number2 && type !== "REJECTED_TYPE" && type !== "MISSED_TYPE").length;
+
+//           if(archUser1 !== null && archUser2 !== null){
+//           result.push({
+//             source: `${number1}`.replace("+591", ""),
+//             target: `${userDevice1}`,
+//             count: callCount1,
+//             namesContactsFromUsers1: `${nameContact1}`,
+//             namesContactsFromUsers2: `${nameContact2}`,
+            
+//           });
+//           result.push({
+//             source: `${number2}`.replace("+591", ""),
+//             target: `${userDevice2}`,
+//             count: callCount2,
+//             namesContactsFromUsers1: `${nameContact1}`,
+//             namesContactsFromUsers2: `${nameContact2}`,
+            
+//           });
+        
+//       }
+//           count += 1;
+//         }
+//       });
+//     });
+  
+//     return result
+// };
+const getComparativeCall = async (idUser1, idUser2) => {
+  const Calls = await CallLog.find();
+  const archUser1 = await getCallLogs(idUser1);
+  const archUser2 = await getCallLogs(idUser2);
   const result = [];
-    let count = 0;
-    
 
-    const callCounts = {};
+  const callCounts = {};
 
-  Calls.forEach(({number, type}) => {
-  // Verificar si el número de origen y destino son iguales
-  if (number === number && type == "OUTGOING_TYPE" || type == "INCOMING_TYPE" ) {
-    // Incrementar el contador correspondiente
-    const phoneNumber = `${number}`.replace("+591", "");
-    callCounts[phoneNumber] = callCounts[phoneNumber] || 0;
-    callCounts[phoneNumber]++;
-  }
-});
+  Calls.forEach(({ number, type }) => {
+    if (type !== "REJECTED_TYPE" && type !== "MISSED_TYPE") {
+      const phoneNumber = number.replace("+591", "");
+      callCounts[phoneNumber] = callCounts[phoneNumber] || 0;
+      callCounts[phoneNumber]++;
+    }
+  });
 
-    archUser1.forEach(({ number: number1, nameContact: nameContact1, userDevice: userDevice1,type:type }) => {
-      archUser2.forEach(({ number: number2, nameContact: nameContact2, userDevice: userDevice2,type:type }) => {
-        if (number1 === number2) {
-          if (nameContact1 === "UNKNOWN" && nameContact2 !== "UNKNOWN") {
-            nameContact1 = `${nameContact1}`;
-          }
-    
-          if (nameContact1 && nameContact2 !== "UNKNOWN") {
-            if (nameContact1 !== nameContact2) {
-              nameContact1 = `${nameContact1}`;
-            }
-          }
-          if(archUser1 !== null && archUser2 !== null){
-            const source = `${number1}`.replace("+591","");
-            const callCount1 = callCounts[source] || 0;
-          if (type !== "REJECTED_TYPE" && type !== "MISSED_TYPE"){
-          result.push({
-            source: `${number1}`.replace("+591", ""),
-            target: `${userDevice1}`,
-            count: callCount1,
-            namesContactsFromUsers1: `${nameContact1}`,
-            namesContactsFromUsers2: `${nameContact2}`,
-            
-          });
-          const source = `${number2}`.replace("+591","");
-          const callCount2 = callCounts[source] || 0;
-          result.push({
-            source: `${number2}`.replace("+591", ""),
-            target: `${userDevice2}`,
-            count: callCount2,
-            namesContactsFromUsers1: `${nameContact1}`,
-            namesContactsFromUsers2: `${nameContact2}`,
-            
-          });
-        }
+  const setArchUser1 = new Set(archUser1.map(({ number }) => number.replace("+591", "")));
+  const setArchUser2 = new Set(archUser2.map(({ number }) => number.replace("+591", "")));
+
+  const commonNumbers = Array.from(setArchUser1).filter(number => setArchUser2.has(number));
+
+  commonNumbers.forEach(commonNumber => {
+    const callCount1 = callCounts[commonNumber] || 0;
+    const callCount2 = callCounts[commonNumber] || 0;
+
+    const matchingContacts = archUser1.filter(({ number }) => number.replace("+591", "") === commonNumber);
+
+    matchingContacts.forEach(({ number: number1, nameContact: nameContact1, userDevice: userDevice1 }) => {
+      const matchingContact2 = archUser2.find(({ number }) => number.replace("+591", "") === commonNumber);
+      const { nameContact: nameContact2, userDevice: userDevice2 } = matchingContact2;
+
+      if (nameContact1 === "UNKNOWN") {
+        nameContact1 = "";
       }
-          count += 1;
-        }
+
+      result.push({
+        source: number1.replace("+591", ""),
+        target: userDevice1,
+        count: callCount1,
+        namesContactsFromUsers1: nameContact1,
+        namesContactsFromUsers2: nameContact2,
+      });
+
+      result.push({
+        source: commonNumber,
+        target: userDevice2,
+        count: callCount2,
+        namesContactsFromUsers1: nameContact1,
+        namesContactsFromUsers2: nameContact2,
       });
     });
-  
-    return result
+  });
+
+  return result;
 };
+
 
 
 
@@ -145,105 +188,201 @@ const getUserDeviceById = async (req, res = response) => {
   }
 }
 
-const getAllUser = async (req, res = response) => {
+// const getAllUser = async (req, res = response) => {
 
- try{ 
-  const User = await UserDevice.find()
-  const Calls = await CallLog.find()
+//  try{ 
+//   const User = await UserDevice.find()
+//   const Calls = await CallLog.find()
   
-  const nodos = []
-  const link = []
-  const user = []
-  const result = []
+//   const nodos = []
+//   const link = []
+//   const user = []
+//   const result = []
   
 
-  User.map(({ _id,nameUser}) => {
-    user.push({
-     userDevice: `${_id}`,
-     name:`${nameUser}`,
-  });
-}) 
-       const nodoUpdate = OneContact(Calls)
-       const linkUpdate = OrderforSort(Calls)
+//   User.map(({ _id,nameUser}) => {
+//     user.push({
+//      userDevice: `${_id}`,
+//      name:`${nameUser}`,
+//   });
+// }) 
+//        const nodoUpdate = OneContact(Calls)
+//        const linkUpdate = OrderforSort(Calls)
           
-       nodoUpdate.map(({nameContact,number}) => {
-         nodos.push({
-          userDevice: `${number}`.replace("+591",""),
-          name:`${nameContact}`,
-       });
-     }) 
+//        nodoUpdate.map(({nameContact,number}) => {
+//          nodos.push({
+//           userDevice: `${number}`.replace("+591",""),
+//           name:`${nameContact}`,
+//        });
+//      }) 
 
-     for (let i = 0; i < user.length; i++) {
-      const userId1 = user[i].userDevice; // Obtén la ID del primer usuario
+//      for (let i = 0; i < user.length; i++) {
+//       const userId1 = user[i].userDevice; // Obtén la ID del primer usuario
   
-      // Recorrer los usuarios restantes
-      for (let j = i + 1; j < user.length; j++) {
-        const userId2 = user[j].userDevice; // Obtén la ID del segundo usuario
+//       // Recorrer los usuarios restantes
+//       for (let j = i + 1; j < user.length; j++) {
+//         const userId2 = user[j].userDevice; // Obtén la ID del segundo usuario
     
-        const ComparativeContacts =  await getComparativeCall(userId1, userId2);
+//         const ComparativeContacts =  await getComparativeCall(userId1, userId2);
         
-            result.push(...ComparativeContacts)
+//             result.push(...ComparativeContacts)
         
+//       }
+//     }
+
+// const callCounts = {};
+
+// Calls.forEach(({number, type}) => {
+//   // Verificar si el número de origen y destino son iguales
+//   if (number === number && type == "OUTGOING_TYPE" || type == "INCOMING_TYPE" ) {
+//     // Incrementar el contador correspondiente
+//     const phoneNumber = `${number}`.replace("+591", "");
+//     callCounts[phoneNumber] = callCounts[phoneNumber] || 0;
+//     callCounts[phoneNumber]++;
+//   }
+// });
+
+// linkUpdate.map(({userDevice, number,type}) => {
+//     const source = `${number}`.replace("+591","");
+//     const callCount = callCounts[source] || 0;
+//     if (type !== "REJECTED_TYPE" && type !== "MISSED_TYPE"){
+//     link.push({ 
+//       source:`${userDevice}`,
+//       target: `${number}`.replace("+591",""),
+//       type: `${type}`,
+//       count: callCount
+//     });
+//   }
+//   })
+
+//  const ContactOrder = nodos
+//  const ContacLink = OneTarget(link)
+//  const OneResult = OneTarget(result)
+
+//  console.log(OneResult)
+//   var node = ContactOrder.concat(user)
+//   var links = ContacLink.concat(OneResult)
+ 
+
+//   const data = {
+//     nodes: node,
+//     links: links
+
+//   }
+
+//   return res.status(200).json({
+//     transaction: true,
+//     code: 0, // Respuesta Existosa
+//     data,
+//   });
+//  }
+
+//  catch (error) {
+//   console.log(error);
+//   return res.status(500).json({
+//     transaction: false,
+//     code: -2,  //Excepcion no controllada
+//     msg: "Excepcion No Controlada, por favor informe al administrador.",
+//   });
+// }
+// }
+const getAllUser = async (req, res = response) => {
+  try {
+    const [users, calls] = await Promise.all([
+      UserDevice.find(),
+      CallLog.find()
+    ]);
+
+    const userMap = new Map(users.map(({ _id, nameUser }) => [`${_id}`, nameUser]));
+
+    const callCounts = new Map();
+    const link = [];
+    const result = [];
+    const nodos = [];
+
+    const comparativeCalls = await Promise.all(
+      users.map(async (user, i) => {
+        const userId1 = user._id;
+        const userId2s = users.slice(i + 1).map(u => u._id);
+
+        const comparativeContacts = await Promise.all(
+          userId2s.map(userId2 => getComparativeCall(userId1, userId2))
+        );
+
+        return comparativeContacts.flat();
+      })
+    );
+
+    for (const comparativeContacts of comparativeCalls) {
+      result.push(...comparativeContacts);
+    }
+
+    for (const call of calls) {
+      const { number, type } = call;
+      const phoneNumber = `${number}`.replace("+591", "");
+
+      if (type === "OUTGOING_TYPE" || type === "INCOMING_TYPE") {
+        callCounts.set(phoneNumber, (callCounts.get(phoneNumber) || 0) + 1);
+      }
+
+      const callCount = callCounts.get(phoneNumber) || 0;
+
+      if (type !== "REJECTED_TYPE" && type !== "MISSED_TYPE") {
+        link.push({
+          source: call.userDevice,
+          target: phoneNumber,
+          type,
+          count: callCount
+        });
       }
     }
 
-const callCounts = {};
+    const nodosUpdate = OneContact(calls);
+    const linkUpdate = OrderforSort(calls);
 
-Calls.forEach(({number, type}) => {
-  // Verificar si el número de origen y destino son iguales
-  if (number === number && type == "OUTGOING_TYPE" || type == "INCOMING_TYPE" ) {
-    // Incrementar el contador correspondiente
-    const phoneNumber = `${number}`.replace("+591", "");
-    callCounts[phoneNumber] = callCounts[phoneNumber] || 0;
-    callCounts[phoneNumber]++;
-  }
-});
+    for (const { nameContact, number } of nodosUpdate) {
+      nodos.push({
+        userDevice: `${number}`.replace("+591", ""),
+        name: nameContact
+      });
+    }
 
-linkUpdate.map(({userDevice, number,type}) => {
-    const source = `${number}`.replace("+591","");
-    const callCount = callCounts[source] || 0;
-    if (type !== "REJECTED_TYPE" && type !== "MISSED_TYPE"){
-    link.push({ 
-      source:`${userDevice}`,
-      target: `${number}`.replace("+591",""),
-      type: `${type}`,
-      count: callCount
+    const ContactOrder = nodos;
+    const ContacLink = OneTarget(link);
+    const OneResult = OneTarget(result);
+
+    const node = ContactOrder.concat(
+      users.map(({ _id }) => ({
+        userDevice: _id,
+        name: userMap.get(`${_id}`)
+      }))
+    );
+
+    const links = ContacLink.concat(OneResult);
+
+    const data = {
+      nodes: node,
+      links: links
+    };
+
+    return res.status(200).json({
+      transaction: true,
+      code: 0,
+      data
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      transaction: false,
+      code: -2,
+      msg: "Excepcion No Controlada, por favor informe al administrador."
     });
   }
-  })
+};
 
- const ContactOrder = nodos
- const ContacLink = OneTarget(link)
- const OneResult = OneTarget(result)
 
- console.log(OneResult)
-  var node = ContactOrder.concat(user)
-  var links = ContacLink.concat(OneResult)
- 
 
-  const data = {
-    nodes: node,
-    links: links
 
-  }
-
- //fs.writeFileSync('./src/data/datosGeneral.json', JSON.stringify(data));
-
-  return res.status(200).json({
-    transaction: true,
-    code: 0, // Respuesta Existosa
-    data,
-  });
- }
- catch (error) {
-  console.log(error);
-  return res.status(500).json({
-    transaction: false,
-    code: -2,  //Excepcion no controllada
-    msg: "Excepcion No Controlada, por favor informe al administrador.",
-  });
-}
-}
 
 const ComparativeCall = async(req, res = reponse) =>{
   try {
