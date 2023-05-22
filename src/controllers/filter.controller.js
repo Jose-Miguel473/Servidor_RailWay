@@ -49,15 +49,21 @@ return data
               nameContact1 = `${nameContact1}`;
             }
           }
-    
+          if(archUser1 !== null && archUser2 !== null){
           result.push({
-            source: `${userDevice1}`,
-            target: `${number1}`.replace("+591", ""),
+            source: `${number1}`.replace("+591", ""),
+            target: `${userDevice1}`,
             namesContactsFromUsers1: `${nameContact1}`,
-            // userID2: `${userDevice2}`,
-            // number2: `${number2}`.replace("+591", ""),
-            // namesContactsFromUsers2: `${nameContact2}`,
+            namesContactsFromUsers2: `${nameContact2}`,
           });
+
+          result.push({
+            source: `${number2}`.replace("+591", ""),
+            target: `${userDevice2}`,
+            namesContactsFromUsers1: `${nameContact1}`,
+            namesContactsFromUsers2: `${nameContact2}`,
+          });
+        }
           count += 1;
         }
       });
@@ -153,10 +159,12 @@ const getAllUser = async (req, res = response) => {
         const userId2 = user[j].userDevice; // Obtén la ID del segundo usuario
     
         const ComparativeContacts =  await getComparativeCall(userId1, userId2);
-        result.push(ComparativeContacts)
+        
+            result.push(...ComparativeContacts)
+        
       }
     }
-    
+//console.log(result)
 const callCounts = {};
 
 Calls.forEach(({number, type}) => {
@@ -186,6 +194,7 @@ linkUpdate.map(({userDevice, number,type}) => {
  const ContacLink = OneTarget(link)
  const OneResult = OneTarget(result)
 
+ console.log(OneResult)
   var node = ContactOrder.concat(user)
   var links = ContacLink.concat(OneResult)
  
@@ -196,7 +205,7 @@ linkUpdate.map(({userDevice, number,type}) => {
 
   }
 
-  //fs.writeFileSync('./src/data/datosGeneral.json', JSON.stringify(data));
+ //fs.writeFileSync('./src/data/datosGeneral.json', JSON.stringify(data));
 
   return res.status(200).json({
     transaction: true,
