@@ -13,7 +13,7 @@ const filter = Router();
 // Get all call logs registred
 filter.get("/getUserDeviceById", getUserDeviceById);
 filter.get("/getAllUser", getAllUser);
-filter.get("/:id1/:id2/ComparativeCall",ComparativeCall)
+filter.get("/:id1/ComparativeCall",ComparativeCall)
 // filter.get("/:id/getAllCallUser", getAllCallUser);
 
 

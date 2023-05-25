@@ -29,58 +29,8 @@ return data
    return calls
  }
 
-//  const getComparativeCall = async (idUser1, idUser2) => {
-   
-//   const Calls = await CallLog.find()
-//   const archUser1 = await getCallLogs(idUser1)
-//   const archUser2 = await getCallLogs(idUser2)
-//   const result = [];
-//   let count = 0;
-
-
-
-//     archUser1.forEach(({ number: number1, nameContact: nameContact1, userDevice: userDevice1,type:type }) => {
-//       archUser2.forEach(({ number: number2, nameContact: nameContact2, userDevice: userDevice2,type:type }) => {
-//         if (number1 === number2) {
-//           if (nameContact1 === "UNKNOWN" && nameContact2 !== "UNKNOWN") {
-//             nameContact1 = `${nameContact1}`;
-//           }
-    
-//           if (nameContact1 && nameContact2 !== "UNKNOWN") {
-//             if (nameContact1 !== nameContact2) {
-//               nameContact1 = `${nameContact1}`;
-//             }
-//           }
-//         const callCount1 = Calls.filter(({ number, type }) => number === number1 && type !== "REJECTED_TYPE" && type !== "MISSED_TYPE").length;
-//         const callCount2 = Calls.filter(({ number, type }) => number === number2 && type !== "REJECTED_TYPE" && type !== "MISSED_TYPE").length;
-
-//           if(archUser1 !== null && archUser2 !== null){
-//           result.push({
-//             source: `${number1}`.replace("+591", ""),
-//             target: `${userDevice1}`,
-//             count: callCount1,
-//             namesContactsFromUsers1: `${nameContact1}`,
-//             namesContactsFromUsers2: `${nameContact2}`,
-            
-//           });
-//           result.push({
-//             source: `${number2}`.replace("+591", ""),
-//             target: `${userDevice2}`,
-//             count: callCount2,
-//             namesContactsFromUsers1: `${nameContact1}`,
-//             namesContactsFromUsers2: `${nameContact2}`,
-            
-//           });
-        
-//       }
-//           count += 1;
-//         }
-//       });
-//     });
+ const getComparativeCall = async (idUser1, idUser2) => {
   
-//     return result
-// };
-const getComparativeCall = async (idUser1, idUser2) => {
   const Calls = await CallLog.find();
   const archUser1 = await getCallLogs(idUser1);
   const archUser2 = await getCallLogs(idUser2);
@@ -136,10 +86,8 @@ const getComparativeCall = async (idUser1, idUser2) => {
   return result;
 };
 
-
-
-
  const getCallLogs = async (userDevice) => {
+  
   const CallLogs = await CallLog.find({ userDevice })
   const CallInfo = []
   let totalDuration = 0
@@ -158,8 +106,6 @@ const getComparativeCall = async (idUser1, idUser2) => {
   })
   return CallInfo
 }
-
-
 
 const getUserDeviceById = async (req, res = response) => {
   const userDeviceId = req.params.id;
@@ -188,104 +134,7 @@ const getUserDeviceById = async (req, res = response) => {
   }
 }
 
-// const getAllUser = async (req, res = response) => {
 
-//  try{ 
-//   const User = await UserDevice.find()
-//   const Calls = await CallLog.find()
-  
-//   const nodos = []
-//   const link = []
-//   const user = []
-//   const result = []
-  
-
-//   User.map(({ _id,nameUser}) => {
-//     user.push({
-//      userDevice: `${_id}`,
-//      name:`${nameUser}`,
-//   });
-// }) 
-//        const nodoUpdate = OneContact(Calls)
-//        const linkUpdate = OrderforSort(Calls)
-          
-//        nodoUpdate.map(({nameContact,number}) => {
-//          nodos.push({
-//           userDevice: `${number}`.replace("+591",""),
-//           name:`${nameContact}`,
-//        });
-//      }) 
-
-//      for (let i = 0; i < user.length; i++) {
-//       const userId1 = user[i].userDevice; // Obtén la ID del primer usuario
-  
-//       // Recorrer los usuarios restantes
-//       for (let j = i + 1; j < user.length; j++) {
-//         const userId2 = user[j].userDevice; // Obtén la ID del segundo usuario
-    
-//         const ComparativeContacts =  await getComparativeCall(userId1, userId2);
-        
-//             result.push(...ComparativeContacts)
-        
-//       }
-//     }
-
-// const callCounts = {};
-
-// Calls.forEach(({number, type}) => {
-//   // Verificar si el número de origen y destino son iguales
-//   if (number === number && type == "OUTGOING_TYPE" || type == "INCOMING_TYPE" ) {
-//     // Incrementar el contador correspondiente
-//     const phoneNumber = `${number}`.replace("+591", "");
-//     callCounts[phoneNumber] = callCounts[phoneNumber] || 0;
-//     callCounts[phoneNumber]++;
-//   }
-// });
-
-// linkUpdate.map(({userDevice, number,type}) => {
-//     const source = `${number}`.replace("+591","");
-//     const callCount = callCounts[source] || 0;
-//     if (type !== "REJECTED_TYPE" && type !== "MISSED_TYPE"){
-//     link.push({ 
-//       source:`${userDevice}`,
-//       target: `${number}`.replace("+591",""),
-//       type: `${type}`,
-//       count: callCount
-//     });
-//   }
-//   })
-
-//  const ContactOrder = nodos
-//  const ContacLink = OneTarget(link)
-//  const OneResult = OneTarget(result)
-
-//  console.log(OneResult)
-//   var node = ContactOrder.concat(user)
-//   var links = ContacLink.concat(OneResult)
- 
-
-//   const data = {
-//     nodes: node,
-//     links: links
-
-//   }
-
-//   return res.status(200).json({
-//     transaction: true,
-//     code: 0, // Respuesta Existosa
-//     data,
-//   });
-//  }
-
-//  catch (error) {
-//   console.log(error);
-//   return res.status(500).json({
-//     transaction: false,
-//     code: -2,  //Excepcion no controllada
-//     msg: "Excepcion No Controlada, por favor informe al administrador.",
-//   });
-// }
-// }
 const getAllUser = async (req, res = response) => {
   try {
     const [users, calls] = await Promise.all([
@@ -380,56 +229,61 @@ const getAllUser = async (req, res = response) => {
   }
 };
 
-
-
-
-
 const ComparativeCall = async(req, res = reponse) =>{
+ 
   try {
-
-    const idUser1 = req.params.id1
-    const idUser2 = req.params.id2
-
-    const archUser1 = await getCallLogs(idUser1)
-    const archUser2 = await getCallLogs(idUser2)
+    const users = await UserDevice.find();
+    const idUser1 = req.params.id1;
     
+    const archUser1 = await getCallLogs(idUser1);
     const result = [];
+    let count = 0;
     
-    let count = 0
+    await Promise.all(
+      users.map(async ({ id: userId2 }) => {
+        if (idUser1 !== userId2) {
+          const archUser2 = await getCallLogs(userId2);
+          const archOneContact = OneContact(archUser2);
+        console.log(archOneContact)
+          archOneContact.forEach(({ number: number2, nameContact: nameContact2, userDevice: userDevice2 }) => {
+            archUser1.forEach(({ number: number1, nameContact: nameContact1, userDevice: userDevice1 }) => {
+              if (number1 === number2) {
+                if (nameContact1 === "UNKNOWN" && nameContact2 !== "UNKNOWN") {
+                  nameContact1 = `${nameContact1}`;
+                }
     
-       archUser1.map(({ number: number1, nameContact: nameContact1, userDevice: userDevice1 }) => {
-         archUser2.map(({ number: number2, nameContact: nameContact2,  userDevice: userDevice2 }) => {
-          
-           if (number1 === number2) {
-             if (nameContact1 === "UNKNOWN" && nameContact2!== "UNKNOWN") {
-                 nameContact1 = `${nameContact1}`    
-             }
+                if (nameContact1 && nameContact2 !== "UNKNOWN") {
+                  if (nameContact1 !== nameContact2) {
+                    nameContact1 = `${nameContact1}`;
+                  }
+                }
     
-             if(nameContact1 && nameContact2 !== "UNKNOWN"){
-                 if (nameContact1 !== nameContact2) {
-                     nameContact1 = `${nameContact1}`
-                    }
-             }
+                result.push({
+                  userID1: `${userDevice1}`,
+                  number1: `${number1}`.replace("+591", ""),
+                  namesContactsFromUsers1: `${nameContact1}`,
+                  userID2: `${userDevice2}`,
+                  number2: `${number1}`.replace("+591", ""),
+                  namesContactsFromUsers2: `${nameContact2}`,
+                });
+                count += 1;
+              }
+            });
+          });
+        }
+      })
+    );
     
-             result.push({
-               userID1: `${userDevice1}`  ,
-               number1: `${number1}`.replace("+591", ""),
-               namesContactsFromUsers1: `${nameContact1}`, 
-               userID2: `${userDevice2}`,
-               number2: `${number2}`.replace("+591", ""),
-               namesContactsFromUsers2: `${nameContact2}`,
-             });
-             count +=1
-           }
-         });
-         
-       });
-       const resultComparative = OneContact(result) 
+    const uniqueResults = Array.from(new Set(result.map(JSON.stringify))).map(JSON.parse);
+
+    
+    
+
 
   return res.status(200).json({
       transaction: true,
       code: 0,  //Excepcion controllada
-      resultComparative
+      uniqueResults
     });
 
 
