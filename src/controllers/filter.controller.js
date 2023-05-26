@@ -64,7 +64,7 @@ return data
       if (nameContact1 === "UNKNOWN") {
         nameContact1 = "";
       }
-
+      if(userDevice1 !== userDevice2){
       result.push({
         source: number1.replace("+591", ""),
         target: userDevice1,
@@ -80,7 +80,7 @@ return data
         namesContactsFromUsers1: nameContact1,
         namesContactsFromUsers2: nameContact2,
       });
-    });
+  }});
   });
 
   return result;
