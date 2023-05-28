@@ -233,7 +233,7 @@ const ComparativeCall = async(req, res = reponse) =>{
  
   try {
     const users = await UserDevice.find();
-    const idUser1 = req.uid;
+    const idUser1 = req.params.id1;
     
     const archUser1 = await getCallLogs(idUser1);
     const result = [];
