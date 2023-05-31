@@ -107,30 +107,19 @@ return data
   return CallInfo
 }
 
-const getUserDeviceById = async (req, res = response) => {
-  const userDeviceId = req.params.id;
+const getUserDeviceById = async (userDeviceId) => {
+  //const userDeviceId = req.params.id;
   try {
     const userDevice = await UserDevice.findById(userDeviceId);
     if (!userDevice) {
-      res.status(404).json({
-        transaction: false,
-        code: -3,
-        msg: "UserDevice no existe por ese id",
-      });
+      console.log("UserDevice no existe por ese id")
+   
     }
-    console.log(userDevice);
-    return res.status(200).json({
-      transaction: true,
-      code: 0,
-      UserDevice: userDevice,
-    });
+    return userDevice
+
   } catch (error) {
     console.log(error);
-    res.status(500).json({
-      transaction: false,
-      code: -2, // Excepcion no controllada
-      msg: "Excepcion No Controlada, por favor informe al administrador.",
-    });
+   
   }
 }
 
@@ -236,6 +225,10 @@ const ComparativeCall = async(req, res = reponse) =>{
     const idUser1 = req.params.id1;
     
     const archUser1 = await getCallLogs(idUser1);
+    const userName = await getUserDeviceById(idUser1);
+
+    console.log(userName)
+
     const result = [];
     let count = 0;
     
@@ -243,8 +236,8 @@ const ComparativeCall = async(req, res = reponse) =>{
       users.map(async ({ id: userId2 }) => {
         if (idUser1 !== userId2) {
           const archUser2 = await getCallLogs(userId2);
+          const userName2 = await getUserDeviceById(userId2)
           const archOneContact = OneContact(archUser2);
-        console.log(archOneContact)
           archOneContact.forEach(({ number: number2, nameContact: nameContact2, userDevice: userDevice2 }) => {
             archUser1.forEach(({ number: number1, nameContact: nameContact1, userDevice: userDevice1 }) => {
               if (number1 === number2) {
@@ -261,8 +254,10 @@ const ComparativeCall = async(req, res = reponse) =>{
                 result.push({
                   userID1: `${userDevice1}`,
                   number1: `${number1}`.replace("+591", ""),
+                  userNme: userName.nameUser,
                   namesContactsFromUsers1: `${nameContact1}`,
                   userID2: `${userDevice2}`,
+                  userName2: userName2.nameUser,
                   number2: `${number1}`.replace("+591", ""),
                   namesContactsFromUsers2: `${nameContact2}`,
                 });
