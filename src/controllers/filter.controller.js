@@ -174,6 +174,7 @@ const getAllUser = async (req, res = response) => {
       const callCount = callCounts.get(phoneNumber) || 0;
 
       if (type !== "REJECTED_TYPE" && type !== "MISSED_TYPE") {
+        
         link.push({
           source: call.userDevice,
           target: phoneNumber,
@@ -186,11 +187,15 @@ const getAllUser = async (req, res = response) => {
   const nodosUpdate = calls;
    //const linkUpdate = OrderforSort(calls);
 
-    for (const { nameContact, number } of nodosUpdate) {
+    for (const { nameContact, number,type } of nodosUpdate) {
+      
+      if (type !== "REJECTED_TYPE" && type !== "MISSED_TYPE") {
+        
       nodos.push({
         userDevice: `${number}`.replace("+591", ""),
         name: nameContact
       });
+      }
     }
 
     const ContactOrder = OneContact(nodos);
