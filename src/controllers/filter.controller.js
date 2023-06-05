@@ -251,8 +251,10 @@ const ComparativeCall = async(req, res = reponse) =>{
           const archUser2 = await getCallLogs(userId2);
           const userName2 = await getUserDeviceById(userId2)
           const archOneContact = OneNumber(archUser2);
-          archOneContact.forEach(({ number: number2, nameContact: nameContact2, userDevice: userDevice2 }) => {
-            archUser1.forEach(({ number: number1, nameContact: nameContact1, userDevice: userDevice1 }) => {
+          archOneContact.forEach(({ number: number2, nameContact: nameContact2, userDevice: userDevice2,type:type1 }) => {
+            archUser1.forEach(({ number: number1, nameContact: nameContact1, userDevice: userDevice1,type:type2 }) => {
+              
+            if (type1 !== "REJECTED_TYPE" && type1 !== "MISSED_TYPE" && type2 !== "REJECTED_TYPE" && type2 !== "MISSED_TYPE") {
               if (number1 === number2) {
                 if (nameContact1 === "UNKNOWN" && nameContact2 !== "UNKNOWN") {
                   nameContact1 = `${nameContact1}`;
@@ -276,6 +278,7 @@ const ComparativeCall = async(req, res = reponse) =>{
                 });
                 count += 1;
               }
+            }
             });
           });
         }
