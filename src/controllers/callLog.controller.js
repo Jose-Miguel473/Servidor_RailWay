@@ -128,8 +128,82 @@ const updateCallLog = async (req, res = response) => {
   }
 };
 
+// const updateCallLogforNumber = async (req, res = response) => {
+  
+//   const callLogNumber = req.params.number; // Obtienes el número del parámetro de la solicitud
+
+//   try {
+//     const callLog = await CallLog.findOne({ number: callLogNumber });
+
+//     if (!callLog) {
+//       return res.status(404).json({
+//         transaction: false,
+//         code: -3,
+//         msg: "CallLog no existe por ese número",
+//       });
+//     }
+
+//     const newCallLog = {
+//       nameContact: req.body.nameContact,
+//     };
+
+//     const callLogUpdated = await CallLog.findOneAndUpdate(
+//       callLogNumber,
+//       newCallLog,
+//       { new: true }
+//     );
+
+//     return res.json({
+//       transaction: true,
+//       code: 3,
+//       CallLog: callLogUpdated,
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).json({
+//       transaction: false,
+//       code: -2,
+//       msg: "Excepción No Controlada, por favor informe al administrador.",
+//     });
+//   }
+// };
+
+const updateCallLogforNumber = async (req, res = response) => {
+  const callLogNumber = req.params.number; // Obtienes el número del parámetro de la solicitud
+  const nameContact = req.body.nameContact; // Obtienes el nuevo valor de nameContact
+
+  try {
+    const result = await CallLog.updateMany(
+      { number: callLogNumber }, // Filtras los documentos por el número
+      { $set: { nameContact } } // Estableces el nuevo valor de nameContact en todos los documentos
+    );
+
+    if (result.n === 0) {
+      return res.status(404).json({
+        transaction: false,
+        code: -3,
+        msg: "No se encontraron CallLogs con ese número",
+      });
+    }
+
+    return res.json({
+      transaction: true,
+      code: 3,
+      msg: result,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      transaction: false,
+      code: -2,
+      msg: "Excepción No Controlada, por favor informe al administrador.",
+    });
+  }
+};
+
 module.exports = {
   getCallLogs,
   registerCallLog,
   updateCallLog,
+  updateCallLogforNumber,
 };

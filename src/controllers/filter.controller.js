@@ -11,7 +11,7 @@ const { userInfo } = require("os");
 function OneContact(CallInfo){
   var number = {}
   var calls = CallInfo.filter(function (e) {
-    return number[e.number] ? false : (number[e.number] = true);
+    return number[e.userDevice] ? false : (number[e.userDevice] = true);
   });
   return calls
 }
@@ -66,8 +66,8 @@ return data
       }
       if(userDevice1 !== userDevice2){
       result.push({
-        source: number1.replace("+591", ""),
-        target: userDevice1,
+        source: userDevice1,
+        target: number1.replace("+591", ""),
         count: callCount1,
         namesContactsFromUsers1: nameContact1,
         namesContactsFromUsers2: nameContact2,
@@ -175,8 +175,8 @@ const getAllUser = async (req, res = response) => {
       }
     }
 
-    const nodosUpdate = OneContact(calls);
-    const linkUpdate = OrderforSort(calls);
+  const nodosUpdate = calls;
+   //const linkUpdate = OrderforSort(calls);
 
     for (const { nameContact, number } of nodosUpdate) {
       nodos.push({
@@ -185,7 +185,7 @@ const getAllUser = async (req, res = response) => {
       });
     }
 
-    const ContactOrder = nodos;
+    const ContactOrder = OneContact(nodos);
     const ContacLink = OneTarget(link);
     const OneResult = OneTarget(result);
 
@@ -270,10 +270,6 @@ const ComparativeCall = async(req, res = reponse) =>{
     );
     
     const uniqueResults = Array.from(new Set(result.map(JSON.stringify))).map(JSON.parse);
-
-    
-    
-
 
   return res.status(200).json({
       transaction: true,

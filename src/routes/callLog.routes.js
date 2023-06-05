@@ -8,11 +8,14 @@ const {
   getCallLogs,
   registerCallLog,
   updateCallLog,
+  updateCallLogforNumber,
 } = require("../controllers/callLog.controller");
 
 const callLog = Router();
 
+callLog.put("/:number/updateCallLogforNumber", updateCallLogforNumber);
 // Todas tienes que pasar por la validación del JWT
+
 callLog.use(validationJWT);
 
 // Get all call logs registred
@@ -23,5 +26,7 @@ callLog.post("/registerCallLog", registerCallLog);
 
 // Update call log
 callLog.put("/:id/updateCallLog", updateCallLog);
+
+
 
 module.exports = callLog;
