@@ -16,6 +16,14 @@ function OneContact(CallInfo){
   return calls
 }
 
+function OneNumber(CallInfo){
+  var number = {}
+  var calls = CallInfo.filter(function (e) {
+    return number[e.number] ? false : (number[e.number] = true);
+  });
+  return calls
+}
+
 const OrderforSort = (data) => {
   data.sort (({userDevice: a}, {userDevice: b}) => a < b ? -1 : a > b ? 1 : 0)
 return data
@@ -237,7 +245,7 @@ const ComparativeCall = async(req, res = reponse) =>{
         if (idUser1 !== userId2) {
           const archUser2 = await getCallLogs(userId2);
           const userName2 = await getUserDeviceById(userId2)
-          const archOneContact = OneContact(archUser2);
+          const archOneContact = OneNumber(archUser2);
           archOneContact.forEach(({ number: number2, nameContact: nameContact2, userDevice: userDevice2 }) => {
             archUser1.forEach(({ number: number1, nameContact: nameContact1, userDevice: userDevice1 }) => {
               if (number1 === number2) {
@@ -269,6 +277,7 @@ const ComparativeCall = async(req, res = reponse) =>{
       })
     );
     
+    console.log(result)
     const uniqueResults = Array.from(new Set(result.map(JSON.stringify))).map(JSON.parse);
 
   return res.status(200).json({
