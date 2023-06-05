@@ -80,24 +80,10 @@ return data
         namesContactsFromUsers1: nameContact1,
         namesContactsFromUsers2: nameContact2,
       });
-      result.push({
-        source: userDevice1,
-        target: commonNumber,
-        count: callCount1,
-        namesContactsFromUsers1: nameContact1,
-        namesContactsFromUsers2: nameContact2,
-      });
-
-      result.push({
-        source: commonNumber,
-        target: userDevice2,
-        count: callCount2,
-        namesContactsFromUsers1: nameContact1,
-        namesContactsFromUsers2: nameContact2,
-      });
+      
       result.push({
         source: userDevice2,
-        target: commonNumber,
+        target: number1.replace("+591", ""),
         count: callCount2,
         namesContactsFromUsers1: nameContact1,
         namesContactsFromUsers2: nameContact2,
