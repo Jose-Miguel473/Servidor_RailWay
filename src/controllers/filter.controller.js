@@ -74,8 +74,8 @@ return data
       }
       if(userDevice1 !== userDevice2){
       result.push({
-        source: userDevice1,
-        target: number1.replace("+591", ""),
+        source: number1.replace("+591", ""),
+        target: userDevice1,
         count: callCount1,
         namesContactsFromUsers1: nameContact1,
         namesContactsFromUsers2: nameContact2,
@@ -83,7 +83,7 @@ return data
       
       result.push({
         source: userDevice2,
-        target: number1.replace("+591", ""),
+        target: commonNumber,
         count: callCount2,
         namesContactsFromUsers1: nameContact1,
         namesContactsFromUsers2: nameContact2,
