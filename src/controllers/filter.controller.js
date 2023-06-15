@@ -87,8 +87,8 @@ return data
       
       if(callCount2 > 0){
       result.push({
-        source: userDevice2,
-        target: commonNumber,
+        source: commonNumber ,
+        target: userDevice2,
         count: callCount2,
         namesContactsFromUsers1: nameContact1,
         namesContactsFromUsers2: nameContact2,
