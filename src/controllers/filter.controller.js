@@ -250,28 +250,40 @@ const ComparativeCall = async (req, res = response) => {
     const result = [];
 
     await Promise.all(
-      users.map(async ({ id: userId2, userDevice: userDevice2 }) => {
+      users.map(async ({ id: userId2}) => {
         if (idUser1 !== userId2) {
           const archUser2 = await getCallLogs(userId2);
           const userName2 = await getUserDeviceById(userId2);
           const archOneContact = OneNumber(archUser2);
 
           archOneContact.forEach(({ number: number2, nameContact: nameContact2, userDevice: userDevice2, type: type1 }) => {
-            const callCount1 = archUser1.filter(({ number: number1, nameContact: nameContact1, userDevice: userDevice1, type: type2 }) => {
+            archUser1.forEach(({ number: number1, nameContact: nameContact1, userDevice: userDevice1, type: type2 }) => {
+
+            const callCount1 = archUser1.filter(({ number: number1, nameContact: nameContactUser1, userDevice: userDevice1, type: type2 }) => {
               return type2 !== "REJECTED_TYPE" && type2 !== "MISSED_TYPE" && number1 === number2;
             }).length;
 
-            const callCount2 = archUser2.filter(({ number: number1, nameContact: nameContact1, userDevice: userDevice1, type: type2 }) => {
+            const callCount2 = archUser2.filter(({ number: number1, nameContact: nameContact2, userDevice: userDevice1, type: type2 }) => {
               return type2 !== "REJECTED_TYPE" && type2 !== "MISSED_TYPE" && number1 === number2;
             }).length;
 
+            if (number1.replace("+591", "") === number2.replace("+591", "")) {
+              if (nameContact1 === "UNKNOWN" && nameContact2 !== "UNKNOWN") {
+                nameContact1 = `${nameContact1}`;
+              }
+
+              if (nameContact1 && nameContact2 !== "UNKNOWN") {
+                if (nameContact1 !== nameContact2) {
+                  nameContact1 = `${nameContact1}`;
+                }
+              }
             if (type1 !== "REJECTED_TYPE" && type1 !== "MISSED_TYPE") {
               if(callCount1 > 0 && callCount2 > 0){
               result.push({
-                userID1: idUser1,
-                number1: `${number2}`.replace("+591", ""),
+                userID1: userDevice1,
+                number1: `${number1}`.replace("+591", ""),
                 userName1: userName.nameUser, // Corregir el nombre de la propiedad
-                namesContactsFromUsers1: `${nameContact2}`,
+                namesContactsFromUsers1: `${nameContact1}`,
                 count1: callCount1,
                 userID2: userDevice2,
                 userName2: userName2.nameUser,
@@ -280,6 +292,7 @@ const ComparativeCall = async (req, res = response) => {
                 count2: callCount2,
               });
               }}
+          }}); 
           });
         }
       })
@@ -349,16 +362,16 @@ const ComparativeCall = async (req, res = response) => {
                 // const callCount1 = callCountsUser1[userDevice1] || 0;
                 // const callCount2 = callCountsUser2[userDevice2] || 0;
 
-//                 if (number1.replace("+591", "") === number2.replace("+591", "")) {
-//                   if (nameContact1 === "UNKNOWN" && nameContact2 !== "UNKNOWN") {
-//                     nameContact1 = `${nameContact1}`;
-//                   }
+                // if (number1.replace("+591", "") === number2.replace("+591", "")) {
+                //   if (nameContact1 === "UNKNOWN" && nameContact2 !== "UNKNOWN") {
+                //     nameContact1 = `${nameContact1}`;
+                //   }
 
-//                   if (nameContact1 && nameContact2 !== "UNKNOWN") {
-//                     if (nameContact1 !== nameContact2) {
-//                       nameContact1 = `${nameContact1}`;
-//                     }
-//                   }
+                //   if (nameContact1 && nameContact2 !== "UNKNOWN") {
+                //     if (nameContact1 !== nameContact2) {
+                //       nameContact1 = `${nameContact1}`;
+                //     }
+                //   }
 
 //                   if (callCount2 > 0 && callCount1 > 0) {
 //                     result.push({
