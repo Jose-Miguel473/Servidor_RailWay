@@ -78,8 +78,8 @@ return data
         const callCount2 = callCountsUser2[userDevice2] || 0;
         if(callCount1 > 0){
         result.push({
-        source: userDevice1 ,
-        target: number1.replace("+591", ""),
+        source: number1.replace("+591", "")  ,
+        target: userDevice1,
         count: callCount1,
         namesContactsFromUsers1: nameContact1,
         namesContactsFromUsers2: nameContact2,
