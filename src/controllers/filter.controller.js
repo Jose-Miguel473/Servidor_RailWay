@@ -73,12 +73,12 @@ return data
       if (nameContact1 === "UNKNOWN") {
         nameContact1 = "";
       }
-      if(userDevice1 !== userDevice2){
+      
         const callCount1 = callCountsUser1[userDevice1] || 0;
         const callCount2 = callCountsUser2[userDevice2] || 0;
         if(callCount1 > 0){
         result.push({
-        source: number1.replace("+591", "")  ,
+        source: number1.replace("+591", ""),
         target: userDevice1,
         count: callCount1,
         namesContactsFromUsers1: nameContact1,
@@ -92,8 +92,15 @@ return data
         count: callCount2,
         namesContactsFromUsers1: nameContact1,
         namesContactsFromUsers2: nameContact2,
+      })
+      result.push({
+        source: commonNumber,
+        target: userDevice2,
+        count: callCount2,
+        namesContactsFromUsers1: nameContact1,
+        namesContactsFromUsers2: nameContact2,
       })};
-  }});
+  });
   });
 
   return result;
@@ -315,105 +322,6 @@ const ComparativeCall = async (req, res = response) => {
     });
   }
 };
-
-
-
-
-
-
-
-// const ComparativeCall = async (req, res = response) => {
-//   try {
-//     const Calls = await CallLog.find();
-//     const users = await UserDevice.find();
-//     const idUser1 = req.params.id1;
-
-//     const archUser1 = await getCallLogs(idUser1);
-//     const userName = await getUserDeviceById(idUser1);
-//     const callCounts = {};
-
-//     const result = [];
-
-    // Calls.forEach(({ number, type, userDevice }) => {
-    //   if (type !== "REJECTED_TYPE" && type !== "MISSED_TYPE") {
-    //     const phoneNumber = number.replace("+591", "");
-    //     if (!callCounts[phoneNumber]) {
-    //       callCounts[phoneNumber] = {};
-    //     }
-    //     callCounts[phoneNumber][userDevice] = callCounts[phoneNumber][userDevice] || 0;
-    //     callCounts[phoneNumber][userDevice]++;
-    //   }
-    // });
-
-//     await Promise.all(
-//       users.map(async ({ id: userId2 }) => {
-        // const callCountsUser1 = callCounts[idUser1] || {};
-        // const callCountsUser2 = callCounts[userId2] || {};
-
-//         if (idUser1 !== userId2) {
-//           const archUser2 = await getCallLogs(userId2);
-//           const userName2 = await getUserDeviceById(userId2);
-//           const archOneContact = OneNumber(archUser2);
-
-//           archOneContact.forEach(({ number: number2, nameContact: nameContact2, userDevice: userDevice2, type: type1 }) => {
-//             archUser1.forEach(({ number: number1, nameContact: nameContact1, userDevice: userDevice1, type: type2 }) => {
-
-//               if (type1 !== "REJECTED_TYPE" && type1 !== "MISSED_TYPE" && type2 !== "REJECTED_TYPE" && type2 !== "MISSED_TYPE") {
-                // const callCount1 = callCountsUser1[userDevice1] || 0;
-                // const callCount2 = callCountsUser2[userDevice2] || 0;
-
-                // if (number1.replace("+591", "") === number2.replace("+591", "")) {
-                //   if (nameContact1 === "UNKNOWN" && nameContact2 !== "UNKNOWN") {
-                //     nameContact1 = `${nameContact1}`;
-                //   }
-
-                //   if (nameContact1 && nameContact2 !== "UNKNOWN") {
-                //     if (nameContact1 !== nameContact2) {
-                //       nameContact1 = `${nameContact1}`;
-                //     }
-                //   }
-
-//                   if (callCount2 > 0 && callCount1 > 0) {
-//                     result.push({
-//                       userID1: `${userDevice1}`,
-//                       number1: `${number1}`.replace("+591", ""),
-//                       userName1: userName.nameUser,
-//                       namesContactsFromUsers1: `${nameContact1}`,
-//                       count1: callCount1,
-//                       userID2: `${userDevice2}`,
-//                       userName2: userName2.nameUser,
-//                       number2: `${number2}`.replace("+591", ""),
-//                       namesContactsFromUsers2: `${nameContact2}`,
-//                       count2: callCount2,
-//                     });
-//                   }
-//                 }
-//               }
-//             });
-//           });
-//         }
-//       })
-//     );
-
-//     console.log(result);
-//     const uniqueResults = Array.from(new Set(result.map(JSON.stringify))).map(JSON.parse);
-
-//     return res.status(200).json({
-//       transaction: true,
-//       code: 0, // Excepción controlada
-//       uniqueResults,
-//     });
-//   } catch (error) {
-//     console.log(error);
-//     return res.status(500).json({
-//       transaction: false,
-//       code: -2, // Excepción no controlada
-//       msg: "Excepción no controlada, por favor informe al administrador.",
-//     });
-//   }
-// };
-
-
 
 module.exports = {
   getUserDeviceById,

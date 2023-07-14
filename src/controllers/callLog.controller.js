@@ -2,7 +2,7 @@ const { response } = require("express");
 const CallLog = require("../models/CallLog.model");
 
 const getCallLogs = async (req, res = response) => {
-  // console.log("UID - GET:",req.uid);
+  
   const userDevice = req.uid;
 
   try {
@@ -21,12 +21,7 @@ const getCallLogs = async (req, res = response) => {
     dateUpdate.map(({ userDevice,id,nameContact,duration,type,typeRaw,number,date}) => {
       CallInfo.push({ userDevice,id,nameContact,duration,type,typeRaw,number,date})
   })
-
-   
-  
-
-
-  console.log ("fechas ordenadas",CallInfo)
+ console.log ("fechas ordenadas",CallInfo)
 
 
     return res.status(200).json({
@@ -153,7 +148,7 @@ const updateCallLogforNumber = async (req, res = response) => {
       msg: result,
     });
   } catch (error) {
-    console.log(error);
+    console.log(error02);
     res.status(500).json({
       transaction: false,
       code: -2,
