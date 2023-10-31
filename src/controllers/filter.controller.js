@@ -316,7 +316,7 @@ const getAllUser = async (req, res = response) => {
 
     const data = {
       nodes: node,
-      links: links
+      links: link
     };
 
     return res.status(200).json({
