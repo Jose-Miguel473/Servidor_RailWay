@@ -20,6 +20,7 @@ const validationJWT = (req, res = response, next) => {
     req.uid = uid;
     req.nameUser = nameUser;
     req.deviceId = deviceId;
+    
   } catch (error) {
     return res.status(401).json({
       transaction: false,

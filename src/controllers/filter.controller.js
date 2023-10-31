@@ -81,7 +81,17 @@ return data
         count: callCount1,
         namesContactsFromUsers1: nameContact1,
         namesContactsFromUsers2: nameContact2,
-      })};
+      })
+    
+      result.push({
+        source: userDevice1 ,
+        target: number1.replace("+591", ""),
+        count: callCount1,
+        namesContactsFromUsers1: nameContact1,
+        namesContactsFromUsers2: nameContact2,
+      })
+    
+    };
       
       if(callCount2 > 0){
       result.push({

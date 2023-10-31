@@ -1,7 +1,7 @@
 
 
 const { response } = require("express");
-const CallLog = require("../models/CallLog.model");
+const CallLog = require("./models/CallLog.model");
 
 const getCallLogs = async (req, res = response) => {
   
@@ -185,7 +185,7 @@ describe('updateCallLogforNumber', () => {
         status: jest.fn().mockReturnThis(),
         json: jest.fn()
       };
-      const CallLog = require('../models/CallLog.model');
+      const CallLog = require('./models/CallLog.model');
       CallLog.updateMany = jest.fn().mockResolvedValue({ n: 2 });
 
       await updateCallLogforNumber(req, res);
