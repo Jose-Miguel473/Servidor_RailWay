@@ -82,7 +82,7 @@ return data
         namesContactsFromUsers1: nameContact1,
         namesContactsFromUsers2: nameContact2,
       })
-    console.log(userDevice1)
+   
     };
       
       if(callCount2 > 0){
