@@ -273,6 +273,12 @@ const getAllUser = async (req, res = response) => {
           type,
           count: callCount
         });
+        link.push({
+          source: phoneNumber,
+          target: call.userDevice,
+          type,
+          count: callCount
+        });
       }
     }
 
