@@ -273,12 +273,12 @@ const getAllUser = async (req, res = response) => {
           type,
           count: callCount
         });
-        link.push({
-          source: phoneNumber,
-          target: call.userDevice,
-          type,
-          count: callCount
-        });
+        // link.push({
+        //   source: phoneNumber,
+        //   target: call.userDevice,
+        //   type,
+        //   count: callCount
+        // });
       }
     }
 
@@ -312,11 +312,11 @@ const getAllUser = async (req, res = response) => {
       }))
     );
 
-    const links = ContacLink.concat(OneResult);
+    const links = link.concat(OneResult);
 
     const data = {
       nodes: node,
-      links: link
+      links: links
     };
 
     return res.status(200).json({
