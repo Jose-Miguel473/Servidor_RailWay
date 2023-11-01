@@ -312,7 +312,7 @@ const getAllUser = async (req, res = response) => {
       }))
     );
 
-    const links = link.concat(OneResult);
+    const links = ContacLink.concat(OneResult);
 
     const data = {
       nodes: node,
