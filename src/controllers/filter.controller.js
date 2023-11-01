@@ -303,6 +303,7 @@ const getAllUser = async (req, res = response) => {
 
     const ContactOrder = OneContact(nodos);
     const ContacLink = OneTarget(link);
+
     const OneResult = OneTarget(result);
 
     const node = ContactOrder.concat(
@@ -312,7 +313,7 @@ const getAllUser = async (req, res = response) => {
       }))
     );
 
-    const links = ContacLink.concat(OneResult);
+    const links = result.concat(ContacLink);
 
     const data = {
       nodes: node,
