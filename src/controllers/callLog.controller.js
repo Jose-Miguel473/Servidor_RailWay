@@ -13,7 +13,7 @@ const getCallLogs = async (req, res = response) => {
     CallInfo = []
     
     const sortByDate = (data) => 
-    data.sort (({date: a}, {date: b}) => a < b ? -1 : a > b ? 1 : 0)
+    data.sort (({date: a}, {date: b}) => a > b ? -1 : a > b ? 1 : 0)
 
    
     const dateUpdate = sortByDate(callLogs)
